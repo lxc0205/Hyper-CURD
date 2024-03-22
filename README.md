@@ -1,6 +1,6 @@
 # HyperIQA
 
-This is a UIC version of HyperIQA.
+This is a UIC version of HyperIQA. Only for experiment for personal use.
 
 ## Dependencies
 
