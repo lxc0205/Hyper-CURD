@@ -16,7 +16,8 @@ net = torchvision.models.vgg16(pretrained=True).cuda().features.eval()
 # Feature Layers ID
 convlayer_id = [4, 9, 16, 23, 30]
 # Sample Rate
-sr = np.array([32, 64, 256, 512, 512])
+sr = np.array([64, 128, 256, 512, 512]) # 减少了特征图数量
+# sr = np.array([32, 64, 256, 512, 512])
 
 # 特征图用
 transform = torchvision.transforms.Compose([

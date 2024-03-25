@@ -71,7 +71,7 @@ def main(config):
     # 新方案
     pred_scores = []
     gt_scores = []
-    with open("./outputs/" + config.dataset + ".txt", "w") as file:
+    with open("./outputs/" + config.dataset + "_short.txt", "w") as file:
         for img, label in tqdm(data):# FloatTensor [1, 3, 224, 224],  FloatTensor [1]
             # img = img.squeeze(0).cpu().numpy() # numpy (224, 224, 3) 
 
