@@ -5,18 +5,15 @@
 #include <math.h>
 #include "tools.h"
 using namespace std;
-
+// short edition
 void main()
 {
-    string filename, outname;
-    // training datasets
-    filename = "./outputs/tid2013.txt";
     // training data matrics
-    vector<vector<double>> data(loadMat(filename));
+    vector<vector<double>> data(loadMat("./outputs/tid2013_short.txt"));
     // merge sizes
     int m = data[0].size();
     int n = data.size();
-    // get Mssim and mos
+    // get Mssim and mos  
     vector<double>mos(n, 0);
     vector<vector<double>> Mssim(m - 1, mos);
     for (int i = 0; i < m - 1; i++)
@@ -31,9 +28,7 @@ void main()
         mos[i] = data[i][m - 1];
     }
     data.clear();
-    // output dir
-    outname = "./outputs/sw_7.txt";
-    // conditional uncorrelation process
-    IQAProcess_cross(Mssim, mos, 0, 8 * m - 15, outname);
+    // conditional uncorrelation process with output dir
+    IQAProcess(Mssim, mos, 0, 8 * m - 15, "./outputs/sw_7.txt");
     return;
 }

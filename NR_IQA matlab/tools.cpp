@@ -6,14 +6,14 @@
 #include "tools.h"
 using namespace std;
 
-// 包含二阶交叉项
-void IQAProcess_cross(vector<vector<double>>& mssim, vector<double>& mos, double R_min, double R_max, string filename)
+// 不含二阶交叉项
+void IQAProcess(vector<vector<double>>& mssim, vector<double>& mos, double R_min, double R_max, string filename)
 {
     // output file stream
     ofstream outfile;
     outfile.open(filename);
     // max saving number and saving container
-    int maxNum = 1000000;
+    int maxNum = 50000;
     vector<vector<double>> max_sw;
     // Mssim data
     vector<vector<double>> Mssim(mssim);
@@ -43,19 +43,6 @@ void IQAProcess_cross(vector<vector<double>>& mssim, vector<double>& mos, double
                     mssim_temp.push_back(pow(2, Mssim[id][i]));
                 else if (fun == 6)
                     mssim_temp.push_back(exp(Mssim[id][i]));
-            }
-            Mssim.push_back(mssim_temp);
-        }
-    }
-    // second order interactive term
-    for (int id_x = 0; id_x < m; id_x++)
-    {
-        for (int id_y = id_x + 1; id_y < m; id_y++)
-        {
-            vector<double> mssim_temp;
-            for (int i = 0; i < n; i++)
-            {
-                mssim_temp.push_back(Mssim[id_x][i] * Mssim[id_y][i]);
             }
             Mssim.push_back(mssim_temp);
         }
@@ -306,6 +293,307 @@ void IQAProcess_cross(vector<vector<double>>& mssim, vector<double>& mos, double
     freeMatrix(no + 1, Rhere);
     freeMatrix(no + 1, Rxy);
 }
+
+// 包含二阶交叉项
+//void IQAProcess_cross(vector<vector<double>>& mssim, vector<double>& mos, double R_min, double R_max, string filename)
+//{
+//    // output file stream
+//    ofstream outfile;
+//    outfile.open(filename);
+//    // max saving number and saving container
+//    int maxNum = 1000000;
+//    vector<vector<double>> max_sw;
+//    // Mssim data
+//    vector<vector<double>> Mssim(mssim);
+//    // Mssim size
+//    int m = Mssim.size();     // layer dim
+//    int n = Mssim[0].size();  // picture dim
+//    // expand Mssim
+//    // first order term
+//    for (int fun = 0; fun < 7; fun++)
+//    {
+//        for (int id = 0; id < m; id++)
+//        {
+//            vector<double> mssim_temp;
+//            for (int i = 0; i < n; i++)
+//            {
+//                if (fun == 0)
+//                    mssim_temp.push_back(pow(Mssim[id][i], 2));
+//                else if (fun == 1)
+//                    mssim_temp.push_back(sqrt(Mssim[id][i]));
+//                else if (fun == 2)
+//                    mssim_temp.push_back(pow(Mssim[id][i], 3));
+//                else if (fun == 3)
+//                    mssim_temp.push_back(cbrt(Mssim[id][i]));
+//                else if (fun == 4)
+//                    mssim_temp.push_back(log(Mssim[id][i]));
+//                else if (fun == 5)
+//                    mssim_temp.push_back(pow(2, Mssim[id][i]));
+//                else if (fun == 6)
+//                    mssim_temp.push_back(exp(Mssim[id][i]));
+//            }
+//            Mssim.push_back(mssim_temp);
+//        }
+//    }
+//    // second order interactive term
+//    for (int id_x = 0; id_x < m; id_x++)
+//    {
+//        for (int id_y = id_x + 1; id_y < m; id_y++)
+//        {
+//            vector<double> mssim_temp;
+//            for (int i = 0; i < n; i++)
+//            {
+//                mssim_temp.push_back(Mssim[id_x][i] * Mssim[id_y][i]);
+//            }
+//            Mssim.push_back(mssim_temp);
+//        }
+//    }
+//    // calculate pearson matrix
+//    m = Mssim.size();
+//    vector<double> vec_temp(m + 1, 0);
+//    vector<vector<double>> R(m + 1, vec_temp);
+//    vec_temp.clear();
+//    MatPearson(Mssim, mos, R);
+//    //start conditional uncorrelation process
+//    int no = 7; //k
+//    double r0 = 0.9999;// threshold
+//    double** Rhere = createMatrix(no + 1, no + 1);
+//    double** Rxy = createMatrix(no + 1, no + 1);
+//    double temp = 0;
+//    for (int i = 0; i < no + 1; i++)
+//    {
+//        Rhere[i][i] = 1;
+//    }
+//    // time clock
+//    clock_t startTime, endTime;
+//    startTime = clock();
+//    for (int i1 = R_min; i1 <= R_max; i1++)
+//    {
+//        cout << "k = 7, R num: " << R_min << " / " << i1 << " / " << R_max << endl;
+//        Rhere[0][no] = R[i1][m];
+//        for (int i2 = i1 + 1; i2 <= m - 1; i2++)
+//        {
+//            temp = R[i1][i2];
+//            if (temp > r0)
+//            {
+//                continue;
+//            }
+//            Rhere[0][1] = temp;
+//            Rhere[1][no] = R[i2][m];
+//            for (int i3 = i2 + 1; i3 <= m - 1; i3++)
+//            {
+//                temp = R[i1][i3];
+//                if (temp > r0)
+//                {
+//                    continue;
+//                }
+//                Rhere[0][2] = temp;
+//                temp = R[i2][i3];
+//                if (temp > r0)
+//                {
+//                    continue;
+//                }
+//                Rhere[1][2] = temp;
+//                Rhere[2][no] = R[i3][m];
+//                for (int i4 = i3 + 1; i4 <= m - 1; i4++)
+//                {
+//                    temp = R[i1][i4];
+//                    if (temp > r0)
+//                    {
+//                        continue;
+//                    }
+//                    Rhere[0][3] = temp;
+//                    temp = R[i2][i4];
+//                    if (temp > r0)
+//                    {
+//                        continue;
+//                    }
+//                    Rhere[1][3] = temp;
+//                    temp = R[i3][i4];
+//                    if (temp > r0)
+//                    {
+//                        continue;
+//                    }
+//                    Rhere[2][3] = temp;
+//                    Rhere[3][no] = R[i4][m];
+//                    for (int i5 = i4 + 1; i5 <= m - 1; i5++)
+//                    {
+//                        temp = R[i1][i5];
+//                        if (temp > r0)
+//                        {
+//                            continue;
+//                        }
+//                        Rhere[0][4] = temp;
+//                        temp = R[i2][i5];
+//                        if (temp > r0)
+//                        {
+//                            continue;
+//                        }
+//                        Rhere[1][4] = temp;
+//                        temp = R[i3][i5];
+//                        if (temp > r0)
+//                        {
+//                            continue;
+//                        }
+//                        Rhere[2][4] = temp;
+//                        temp = R[i4][i5];
+//                        if (temp > r0)
+//                        {
+//                            continue;
+//                        }
+//                        Rhere[3][4] = temp;
+//                        Rhere[4][no] = R[i5][m];
+//                        for (int i6 = i5 + 1; i6 <= m - 1; i6++)
+//                        {
+//                            temp = R[i1][i6];
+//                            if (temp > r0)
+//                            {
+//                                continue;
+//                            }
+//                            Rhere[0][5] = temp;
+//                            temp = R[i2][i6];
+//                            if (temp > r0)
+//                            {
+//                                continue;
+//                            }
+//                            Rhere[1][5] = temp;
+//                            temp = R[i3][i6];
+//                            if (temp > r0)
+//                            {
+//                                continue;
+//                            }
+//                            Rhere[2][5] = temp;
+//                            temp = R[i4][i6];
+//                            if (temp > r0)
+//                            {
+//                                continue;
+//                            }
+//                            Rhere[3][5] = temp;
+//                            temp = R[i5][i6];
+//                            if (temp > r0)
+//                            {
+//                                continue;
+//                            }
+//                            Rhere[4][5] = temp;
+//                            Rhere[5][no] = R[i6][m];
+//                            for (int i7 = i6 + 1; i7 <= m - 1; i7++)
+//                            {
+//                                temp = R[i1][i7];
+//                                if (temp > r0)
+//                                {
+//                                    continue;
+//                                }
+//                                Rhere[0][6] = temp;
+//                                temp = R[i2][i7];
+//                                if (temp > r0)
+//                                {
+//                                    continue;
+//                                }
+//                                Rhere[1][6] = temp;
+//                                temp = R[i3][i7];
+//                                if (temp > r0)
+//                                {
+//                                    continue;
+//                                }
+//                                Rhere[2][6] = temp;
+//                                temp = R[i4][i7];
+//                                if (temp > r0)
+//                                {
+//                                    continue;
+//                                }
+//                                Rhere[3][6] = temp;
+//                                temp = R[i5][i7];
+//                                if (temp > r0)
+//                                {
+//                                    continue;
+//                                }
+//                                Rhere[4][6] = temp;
+//                                temp = R[i6][i7];
+//                                if (temp > r0)
+//                                {
+//                                    continue;
+//                                }
+//                                Rhere[5][6] = temp;
+//                                Rhere[6][no] = R[i7][m];
+//
+//                                for (int i = 0; i < no + 1; i++)
+//                                {
+//                                    for (int j = 0; j < no + 1; j++)
+//                                    {
+//                                        Rxy[i][j] = Rhere[i][j];
+//                                    }
+//                                }
+//                                double recidiag;
+//                                for (int i = 0; i <= no - 1; i++)
+//                                {
+//                                    recidiag = 1 / Rxy[i][i];
+//                                    for (int j = i + 1; j <= no; j++)
+//                                    {
+//                                        temp = Rxy[i][j] * recidiag;
+//                                        for (int p = j; p <= no; p++)
+//                                        {
+//                                            Rxy[j][p] = Rxy[j][p] - Rxy[i][p] * temp;
+//                                        }
+//                                    }
+//                                }
+//                                double sw = Rxy[no][no]; // omega^2
+//                                if ((sw <= 1) && (sw > 0))
+//                                {
+//                                    if (max_sw.size() < maxNum)
+//                                    {
+//                                        vector<double> temp{ double(i1),double(i2),double(i3),double(i4),double(i5),double(i6),double(i7),sw };
+//                                        max_sw.push_back(temp);
+//                                    }
+//                                    else
+//                                    {
+//                                        double value = 1;
+//                                        double index = -1;
+//                                        for (int w = 0; w < maxNum; w++)
+//                                        {
+//                                            if (max_sw[w][7] < value)
+//                                            {
+//                                                value = max_sw[w][7];
+//                                                index = w;
+//                                            }
+//                                        }
+//                                        if (sw < max_sw[index][7])
+//                                        {
+//                                            max_sw[index][0] = double(i1);
+//                                            max_sw[index][1] = double(i2);
+//                                            max_sw[index][2] = double(i3);
+//                                            max_sw[index][3] = double(i4);
+//                                            max_sw[index][4] = double(i5);
+//                                            max_sw[index][5] = double(i6);
+//                                            max_sw[index][6] = double(i7);
+//                                            max_sw[index][7] = sw;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    //saving  max_sw data
+//    for (int i = 0; i < maxNum; i++)
+//    {
+//        for (int j = 0; j < no + 1; j++)
+//        {
+//            outfile << max_sw[i][j] << ' ';
+//        }
+//        outfile << endl;
+//    }
+//    // close file stream
+//    outfile.close();
+//    // end time
+//    endTime = clock();
+//    cout << "Time used: " << (double)(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
+//    // free space
+//    freeMatrix(no + 1, Rhere);
+//    freeMatrix(no + 1, Rxy);
+//}
 
 // 原始版本，不包含二阶交叉项 可能存在语法错误
 //void IQAProcess(vector<vector<double>>& mssim, vector<double>& mos, double R_min, double R_max, string filename)

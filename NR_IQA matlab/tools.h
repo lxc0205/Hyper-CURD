@@ -21,6 +21,6 @@ void freeMatrix(int row, double** Matrix);
 
 double* createVector(int size);
 
-void IQAProcess_cross(vector<vector<double>>& mssim, vector<double>& mos, double R_min, double R_max, string filename);
+//void IQAProcess_cross(vector<vector<double>>& mssim, vector<double>& mos, double R_min, double R_max, string filename);
 
 void IQAProcess(vector<vector<double>>& mssim, vector<double>& mos, double R_min, double R_max, string filename);

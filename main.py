@@ -50,36 +50,14 @@ def main(config):
     data = dataLoader.get_data()
 
     # 原方案
-    # pred_scores = []
-    # gt_scores = []
-    # for img, label in tqdm(data): # FloatTensor [1, 3, 224, 224],  FloatTensor [1]
-
-    #     score = H.model(img)
-
-    #     pred_scores.append(float(score.item()))
-    #     gt_scores = gt_scores + label.tolist()
-
-    # pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, config.patch_num)), axis=1)
-    # gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, config.patch_num)), axis=1)
-    # srcc, _ = stats.spearmanr(pred_scores, gt_scores)
-    # plcc, _ = stats.pearsonr(pred_scores, gt_scores)
-
-    # print('Testing median SRCC %4.4f,\tmedian PLCC %4.4f' % (srcc, plcc))
-
-            
-
-    # 新方案
     pred_scores = []
     gt_scores = []
-    with open("./outputs/" + config.dataset + "_short.txt", "w") as file:
-        for img, label in tqdm(data):# FloatTensor [1, 3, 224, 224],  FloatTensor [1]
-            # img = img.squeeze(0).cpu().numpy() # numpy (224, 224, 3) 
+    for img, label in tqdm(data): # FloatTensor [1, 3, 224, 224],  FloatTensor [1]
 
-            layer_scores, score = U.model(img)
-            saveLayerScore(file, layer_scores, label) # 保存层分数
+        score = H.model(img)
 
-            pred_scores.append(float(score.item()))
-            gt_scores = gt_scores + label.tolist()
+        pred_scores.append(float(score.item()))
+        gt_scores = gt_scores + label.tolist()
 
     pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, config.patch_num)), axis=1)
     gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, config.patch_num)), axis=1)
@@ -87,6 +65,28 @@ def main(config):
     plcc, _ = stats.pearsonr(pred_scores, gt_scores)
 
     print('Testing median SRCC %4.4f,\tmedian PLCC %4.4f' % (srcc, plcc))
+
+            
+
+    # 新方案
+    # pred_scores = []
+    # gt_scores = []
+    # with open("./outputs/" + config.dataset + "_short.txt", "w") as file:
+    #     for img, label in tqdm(data):# FloatTensor [1, 3, 224, 224],  FloatTensor [1]
+    #         # img = img.squeeze(0).cpu().numpy() # numpy (224, 224, 3) 
+
+    #         layer_scores, score = U.model(img)
+    #         saveLayerScore(file, layer_scores, label) # 保存层分数
+
+    #         pred_scores.append(float(score.item()))
+    #         gt_scores = gt_scores + label.tolist()
+
+    # pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, config.patch_num)), axis=1)
+    # gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, config.patch_num)), axis=1)
+    # srcc, _ = stats.spearmanr(pred_scores, gt_scores)
+    # plcc, _ = stats.pearsonr(pred_scores, gt_scores)
+
+    # print('Testing median SRCC %4.4f,\tmedian PLCC %4.4f' % (srcc, plcc))
 
 
 if __name__ == '__main__':
