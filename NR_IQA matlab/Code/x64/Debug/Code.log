@@ -1,5 +1,0 @@
-﻿  main.cpp
-E:\NR_IQA matlab\main.cpp(10,1): warning C4326: “main”的返回类型应为“int”而非“void”
-E:\NR_IQA matlab\main.cpp(17,11): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-E:\NR_IQA matlab\main.cpp(18,11): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  Code.vcxproj -> E:\NR_IQA matlab\x64\Debug\Code.exe

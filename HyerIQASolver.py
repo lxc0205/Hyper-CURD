@@ -71,6 +71,8 @@ class HyperIQASolver(object):
             if test_srcc > best_srcc:
                 best_srcc = test_srcc
                 best_plcc = test_plcc
+                torch.save(self.model_hyper.state_dict(), 'pretrained/' + str(t) + '_' + str(best_srcc) + '_pretrained.pkl') 
+            
             print('%d\t%4.3f\t\t%4.4f\t\t%4.4f\t\t%4.4f' %
                   (t + 1, sum(epoch_loss) / len(epoch_loss), train_srcc, test_srcc, test_plcc))
 
@@ -82,10 +84,10 @@ class HyperIQASolver(object):
                           {'params': self.model_hyper.res.parameters(), 'lr': self.lr}
                           ]
             self.solver = torch.optim.Adam(self.paras, weight_decay=self.weight_decay)
-            
+
+   
         print('Best test SRCC %f, PLCC %f' % (best_srcc, best_plcc))
         
-        torch.save(self.model_hyper.state_dict(), 'tid2013_pretrained.pkl')
         return best_srcc, best_plcc
 
     def test(self, data):
@@ -114,3 +116,7 @@ class HyperIQASolver(object):
 
         self.model_hyper.train(True)
         return test_srcc, test_plcc
+    
+    def save(self, dataset):
+        """Save the model."""
+        torch.save(self.model_hyper.state_dict(), dataset + '_pretrained.pkl')

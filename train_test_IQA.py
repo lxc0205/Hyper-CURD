@@ -13,7 +13,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 def main(config):
 
     folder_path = {
-        'live': './Database/databaserelease2/',
+        'live': './Database/LIVE/',
         'csiq': './Database/CSIQ/',
         'tid2013': './Database/TID2013/',
         'livec': './Database/ChallengeDB_release/ChallengeDB_release/',
@@ -44,9 +44,8 @@ def main(config):
 
         solver = HyperIQASolver(config, folder_path[config.dataset], train_index, test_index)
         srcc_all[i], plcc_all[i] = solver.train()
+        solver.save(config.dataset)
 
-    # print(srcc_all)
-    # print(plcc_all)
     srcc_med = np.median(srcc_all)
     plcc_med = np.median(plcc_all)
 
@@ -56,7 +55,7 @@ def main(config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
+    parser.add_argument('--dataset', dest='dataset', type=str, default='csiq', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
     parser.add_argument('--train_patch_num', dest='train_patch_num', type=int, default=25, help='Number of sample patches from training image')
     parser.add_argument('--test_patch_num', dest='test_patch_num', type=int, default=25, help='Number of sample patches from testing image')
     parser.add_argument('--lr', dest='lr', type=float, default=2e-5, help='Learning rate')

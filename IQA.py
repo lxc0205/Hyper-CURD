@@ -5,11 +5,7 @@ import numpy as np
 import torchvision
 from torchvision.transforms import ToPILImage 
 
-# model
-model_hyper = models.HyperNet(16, 112, 224, 112, 56, 28, 14, 7).cuda()
-model_hyper.train(False)
-# load our pre-trained model on the koniq-10k dataset
-model_hyper.load_state_dict((torch.load('./pretrained/tid2013_pretrained.pkl')))
+
 
 # Load VGG model
 net = torchvision.models.vgg16(pretrained=True).cuda().features.eval()
@@ -28,15 +24,21 @@ transform = torchvision.transforms.Compose([
 to_pil = ToPILImage()
 
 class Hyper_IQA():
-    def __init__(self):
+    def __init__(self, dataset):
         super(Hyper_IQA, self).__init__()
+        # load our pre-trained model on the koniq-10k dataset
+        # model
+        self.model_hyper = models.HyperNet(16, 112, 224, 112, 56, 28, 14, 7).cuda()
+        self.model_hyper.train(False)
+        self.model_hyper.load_state_dict((torch.load('./pretrained/' + dataset + '_pretrained.pkl')))
+
 
     def model(self, img):
         img = torch.tensor(img).cuda()
         # 随机计算十次计算平均scores
         pred_scores = []
         for i in range(10):
-            paras = model_hyper(img)  # 'paras' contains the network weights conveyed to target network
+            paras = self.model_hyper(img)  # 'paras' contains the network weights conveyed to target network
 
             # Building target network
             model_target = models.TargetNet(paras).cuda()
@@ -53,8 +55,11 @@ class Hyper_IQA():
 
 
 class UIC_IQA():
-    def __init__(self):
+    def __init__(self, dataset):
         super(UIC_IQA, self).__init__()
+        self.model_hyper = models.HyperNet(16, 112, 224, 112, 56, 28, 14, 7).cuda()
+        self.model_hyper.train(False)
+        self.model_hyper.load_state_dict((torch.load('./pretrained/' + dataset + '_pretrained.pkl')))
 
     def extractFeature(self, img):
         img = torch.tensor(img).cuda()
@@ -84,7 +89,7 @@ class UIC_IQA():
         # random crop 10 patches and calculate mean quality score
         for feat in feat_map:
             for i in range(10):
-                paras = model_hyper(feat)  # 'paras' contains the network weights conveyed to target network
+                paras = self.model_hyper(feat)  # 'paras' contains the network weights conveyed to target network
 
                 # Building target network
                 model_target = models.TargetNet(paras).cuda()
