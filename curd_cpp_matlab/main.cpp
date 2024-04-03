@@ -9,7 +9,7 @@ using namespace std;
 void main()
 {  
     // training data matrics
-    vector<vector<double>> data(loadMat("../outputs/live.txt"));
+    vector<vector<double>> data(loadMat("../outputs/koniq-10k.txt"));
     // merge sizes
     int m = data[0].size();
     int n = data.size();
@@ -29,6 +29,6 @@ void main()
     }
     data.clear();
     // conditional uncorrelation process with output dir
-    IQAProcess(Mssim, mos, 0, 8 * m - 15, "./outputs/sw_7_live.txt");
+    IQAProcess(Mssim, mos, 0, 8 * m - 15, "./outputs/sw_7_koniq-10k.txt");
     return;
 }

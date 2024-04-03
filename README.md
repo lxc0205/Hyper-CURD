@@ -1,4 +1,4 @@
-# HyperIQA
+# Hyper-CURD
 
 This is a UIC version of HyperIQA. Only for experiment for personal use.
 
@@ -42,3 +42,23 @@ Some available options:
 * `--batch_size`: Batch size.
 
 When training or testing on CSIQ dataset, please put 'csiq_label.txt' in your own CSIQ folder.
+
+### Testing on IQA databases
+
+Testing our model on the LIVE Challenge Dataset.
+
+```
+python main.py
+```
+
+### curd regression
+
+Curd regression.
+
+```
+curd_cpp_matlab/main.cpp
+```
+
+```
+curd_cpp_matlab/Regression.m
+```

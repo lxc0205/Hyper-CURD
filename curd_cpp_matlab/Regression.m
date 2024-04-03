@@ -5,7 +5,7 @@ addpath(genpath('outputs'));
 no = 7;
 fprintf("k = %d\n",no);
 % 根据 TID2013 的数据计算回归方程
-dataset = 'live';
+dataset = 'koniq-10k';
 Layerscore_Mos = load(['..\outputs\', dataset, '.txt']);
 Mssim = Layerscore_Mos(:,1:end-1);
 mos = Layerscore_Mos(:,end);
