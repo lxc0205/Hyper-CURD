@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 from scipy.stats import spearmanr, pearsonr
 
@@ -58,12 +59,12 @@ def loadtxt(file_path):
     return np.array(data)
 
 
-if '__main__' == __name__:
+def main(config):
     # 设置参数
     no = 7
     print(f"k = {no}")
 
-    dataset = 'koniq-10k'
+    dataset = config.dataset
     Layerscore_Mos = loadtxt(f'.\outputs\{dataset}.txt')
     mos = Layerscore_Mos[:, -1]
     Mssim = Layerscore_Mos[:, :-1]
@@ -96,3 +97,10 @@ if '__main__' == __name__:
 
     # 保存结果到文件
     np.savetxt(f'outputs\\results_{dataset}_no{no}.txt', mat, delimiter=',')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
+    config = parser.parse_args()
+    main(config)
