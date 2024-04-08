@@ -32,7 +32,7 @@ You will get a quality score ranging from 0-100, and a higher value indicates be
 Training the baseline model on the LIVE Challenge Dataset.
 
 ```
-python train_test_IQA.py
+python train.py
 ```
 
 Some available options:
@@ -48,7 +48,7 @@ When training on CSIQ dataset, please put 'csiq_label.txt' in your own CSIQ fold
 Testing our model on the LIVE Challenge Dataset.
 
 ```
-python main.py
+python eval.py
 ```
 
 ### curd regression
@@ -58,5 +58,5 @@ Curd regression.
 ```
 curd_cpp_matlab/main.cpp
 
-regression.py
+regress.py
 ```
