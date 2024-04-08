@@ -58,5 +58,5 @@ Curd regression.
 ```
 curd_cpp_matlab/main.cpp
 
-curd_cpp_matlab/regression.py
+regression.py
 ```
