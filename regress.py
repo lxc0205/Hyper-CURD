@@ -70,7 +70,7 @@ def main(config):
     Mssim = Layerscore_Mos[:, :-1]
 
     # 读取 index + sw 到 Line
-    line = np.loadtxt(f'.\curd_cpp_matlab\outputs\sw_{no}_{dataset}.txt')
+    line = np.loadtxt(f'.\outputs\sw_{no}_{dataset}.txt')
 
     # 用函数集扩充 Mssim
     Mssim = expand(Mssim)

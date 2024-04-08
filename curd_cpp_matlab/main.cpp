@@ -29,6 +29,6 @@ void main()
     }
     data.clear();
     // conditional uncorrelation process with output dir
-    IQAProcess(Mssim, mos, 0, 8 * m - 15, "./outputs/sw_7_koniq-10k.txt");
+    IQAProcess(Mssim, mos, 0, 8 * m - 15, "../outputs/sw_7_koniq-10k.txt");
     return;
 }
