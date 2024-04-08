@@ -1,6 +1,6 @@
 # Hyper-CURD
 
-This is a UIC version of HyperIQA. Only for experiment for personal use.
+This is the code of Hyper-CURD. Only for experiment for personal use.
 
 ## Dependencies
 
@@ -27,9 +27,9 @@ python demo.py
 
 You will get a quality score ranging from 0-100, and a higher value indicates better image quality.
 
-### Training & Testing on IQA databases
+### Training on IQA databases
 
-Training and testing our model on the LIVE Challenge Dataset.
+Training the baseline model on the LIVE Challenge Dataset.
 
 ```
 python train_test_IQA.py
@@ -41,7 +41,7 @@ Some available options:
 * `--test_patch_num`: Sampled image patch number per testing image.
 * `--batch_size`: Batch size.
 
-When training or testing on CSIQ dataset, please put 'csiq_label.txt' in your own CSIQ folder.
+When training on CSIQ dataset, please put 'csiq_label.txt' in your own CSIQ folder.
 
 ### Testing on IQA databases
 
@@ -57,8 +57,6 @@ Curd regression.
 
 ```
 curd_cpp_matlab/main.cpp
-```
 
-```
-curd_cpp_matlab/Regression.m
+curd_cpp_matlab/regression.py
 ```
