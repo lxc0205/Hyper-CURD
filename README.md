@@ -19,7 +19,7 @@ You will get a quality score ranging from 0-100, and a higher value indicates be
 
 ### Training on IQA databases
 
-Training the baseline model on the LIVE Challenge Dataset.
+Training the baseline model on Datasets.
 
 ```
 python train.py
