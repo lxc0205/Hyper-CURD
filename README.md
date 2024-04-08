@@ -11,7 +11,6 @@ This is the code of Hyper-CURD. Only for personal use.
 
 (optional for loading specific IQA Datasets)
 - csv (KonIQ-10k Dataset)
-- openpyxl (BID Dataset)
 
 ## Usages
 
@@ -26,7 +25,7 @@ python train.py
 ```
 
 Some available options:
-* `--dataset`: Training and testing dataset, support datasets: livec | koniq-10k | bid | live | csiq | tid2013.
+* `--dataset`: Training dataset, support datasets: koniq-10k | live | csiq | tid2013.
 * `--train_patch_num`: Sampled image patch number per training image.
 * `--test_patch_num`: Sampled image patch number per testing image.
 * `--batch_size`: Batch size.
@@ -35,11 +34,17 @@ When training on CSIQ dataset, please put 'csiq_label.txt' in your own CSIQ fold
 
 ### Testing on IQA databases
 
-Testing our model on the LIVE Challenge Dataset.
+Testing the baseline model on Dataset.
 
 ```
 python eval.py
 ```
+
+Some available options:
+* `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
+* `--patch_num`: Number of sample patches from testing image.
+* `--patch_size`: Crop size for training & testing image patches.
+* `--curd`: The flag of using curd.
 
 ### curd regression
 
@@ -50,3 +55,6 @@ curd_cpp_matlab/main.cpp
 
 regress.py
 ```
+
+Some available options:
+* `--dataset`: CURD training dataset, support datasets:  koniq-10k | live | csiq | tid2013.
