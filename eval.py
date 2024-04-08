@@ -41,8 +41,8 @@ def main(config):
     print('Testing on %s dataset' % (config.dataset))
     
     # IQA方法
-    U = UIC_IQA(config.dataset)
-    H = Hyper_IQA(config.dataset)
+    U = UIC_IQA(config.pretrained_dataset)
+    H = Hyper_IQA(config.pretrained_dataset)
 
     idx = img_num[config.dataset]
 
@@ -71,7 +71,12 @@ def main(config):
         # 新方案
         pred_scores = []
         gt_scores = []
-        with open("./outputs/" + config.dataset + ".txt", "w") as file:
+        if config.dataset == config.pretrained_dataset:
+            outputs_path = "./outputs/" + config.dataset + ".txt"
+        else:
+            outputs_path = "./outputs/" + config.dataset + "_" + config.pretrained_dataset + ".txt"
+            
+        with open(outputs_path, "w") as file:
             for img, label in tqdm(data):# FloatTensor [1, 3, 224, 224],  FloatTensor [1]
 
                 layer_scores, score = U.model(img)
@@ -91,6 +96,7 @@ def main(config):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
+    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
     parser.add_argument('--patch_num', dest='patch_num', type=int, default=1, help='Number of sample patches from testing image')
     parser.add_argument('--patch_size', dest='patch_size', type=int, default=224, help='Crop size for training & testing image patches')
     parser.add_argument('--curd', dest='curd', type=bool, default=False, help='The flag of using curd')
