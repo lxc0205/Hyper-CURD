@@ -1,6 +1,6 @@
 # Hyper-CURD
 
-This is the code of Hyper-CURD. Only for experiment for personal use.
+This is the code of Hyper-CURD. Only for personal use.
 
 ## Dependencies
 
