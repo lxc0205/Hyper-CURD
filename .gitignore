@@ -4,9 +4,9 @@ experiment.csv
 *.pkl
 *.jpg
 Database/
-curd/.vs/**/*
-curd/Code/**/*
-curd/x64/**/*
+curd/.vs/*
+curd/Code/*
+curd/x64/*
 curd/Code.sln
 curd/Code.vcxproj
 curd/Code.vcxproj.filters
