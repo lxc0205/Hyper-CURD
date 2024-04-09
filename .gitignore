@@ -3,8 +3,8 @@ experiment.xlsx
 *.mat
 *.pkl
 *.jpg
-curd/
+curd/*
+!/curd/curd.cpp
 Database/
 pretrained/
 data/
-!curd/curd.cpp
