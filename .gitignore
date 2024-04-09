@@ -1,10 +1,10 @@
 experiment.xlsx
-*.txt
 *.mat
 *.pkl
 *.jpg
 curd/*
 !/curd/curd.cpp
+outputs/
 Database/
 pretrained/
 data/
