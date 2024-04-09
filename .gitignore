@@ -11,3 +11,4 @@ curd/Code.sln
 curd/Code.vcxproj
 curd/Code.vcxproj.filters
 curd/Code.vcxproj.user
+/data/*
