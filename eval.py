@@ -102,4 +102,3 @@ if __name__ == '__main__':
     parser.add_argument('--curd', dest='curd', type=bool, default=False, help='The flag of using curd')
     config = parser.parse_args()
     main(config)
-

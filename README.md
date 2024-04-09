@@ -51,7 +51,7 @@ Some available options:
 Curd regression.
 
 ```
-curd_cpp_matlab/main.cpp
+curd/curd.cpp
 
 regress.py
 ```
