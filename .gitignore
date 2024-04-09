@@ -4,10 +4,10 @@ experiment.csv
 *.pkl
 *.jpg
 Database/
-curd\.vs
-curd\Code
-curd\x64
-curd\Code.sln
-curd\Code.vcxproj
-curd\Code.vcxproj.filters
-curd\Code.vcxproj.user
+curd/.vs/**/*
+curd/Code/**/*
+curd/x64/**/*
+curd/Code.sln
+curd/Code.vcxproj
+curd/Code.vcxproj.filters
+curd/Code.vcxproj.user
