@@ -6,7 +6,6 @@ import torchvision
 from torchvision.transforms import ToPILImage 
 
 
-
 # Load VGG model
 net = torchvision.models.vgg16(pretrained=True).cuda().features.eval()
 # Feature Layers ID

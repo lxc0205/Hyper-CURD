@@ -4,7 +4,7 @@ import data_loader
 import numpy as np
 from tqdm import tqdm
 from scipy import stats
-from IQA import UIC_IQA, Hyper_IQA
+from iqa import UIC_IQA, Hyper_IQA
 
 import warnings
 
