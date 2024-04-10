@@ -96,7 +96,7 @@ def main(config):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
-    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
+    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='koniq-10k', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
     parser.add_argument('--patch_num', dest='patch_num', type=int, default=1, help='Number of sample patches from testing image')
     parser.add_argument('--patch_size', dest='patch_size', type=int, default=224, help='Crop size for training & testing image patches')
     parser.add_argument('--curd', dest='curd', type=bool, default=False, help='The flag of using curd')

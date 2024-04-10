@@ -29,12 +29,12 @@ def main(config):
         'koniq-10k': list(range(0, 10073)),
         'bid': list(range(0, 586)),
     }
-    sel_num = img_num[config.dataset]
+    sel_num = img_num[config.pretrained_dataset]
 
     srcc_all = np.zeros(config.train_test_num, dtype=np.float)
     plcc_all = np.zeros(config.train_test_num, dtype=np.float)
 
-    print('Training and testing on %s dataset for %d rounds...' % (config.dataset, config.train_test_num))
+    print('Training on %s dataset for %d rounds...' % (config.pretrained_dataset, config.train_test_num))
     for i in range(config.train_test_num):
         print('Round %d' % (i+1))
         # Randomly select 80% images for training and the rest for testing
@@ -42,9 +42,9 @@ def main(config):
         train_index = sel_num[0:int(round(0.8 * len(sel_num)))]
         test_index = sel_num[int(round(0.8 * len(sel_num))):len(sel_num)]
 
-        solver = HyperIQASolver(config, folder_path[config.dataset], train_index, test_index)
+        solver = HyperIQASolver(config, folder_path[config.pretrained_dataset], train_index, test_index)
         srcc_all[i], plcc_all[i] = solver.train()
-        solver.save(config.dataset)
+        solver.save(config.pretrained_dataset)
 
     srcc_med = np.median(srcc_all)
     plcc_med = np.median(plcc_all)
@@ -55,7 +55,7 @@ def main(config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', dest='dataset', type=str, default='csiq', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
+    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
     parser.add_argument('--train_patch_num', dest='train_patch_num', type=int, default=25, help='Number of sample patches from training image')
     parser.add_argument('--test_patch_num', dest='test_patch_num', type=int, default=25, help='Number of sample patches from testing image')
     parser.add_argument('--lr', dest='lr', type=float, default=2e-5, help='Learning rate')

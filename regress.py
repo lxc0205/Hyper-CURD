@@ -64,13 +64,15 @@ def main(config):
     no = 7
     print(f"k = {no}")
 
-    dataset = config.dataset
-    Layerscore_Mos = loadtxt(f'.\outputs\{dataset}.txt')
+    Layerscore_Mos = loadtxt(f'.\outputs\{config.dataset}.txt')
     mos = Layerscore_Mos[:, -1]
     Mssim = Layerscore_Mos[:, :-1]
 
     # 读取 index + sw 到 Line
-    line = np.loadtxt(f'.\outputs\sw_{no}_{dataset}.txt')
+    if config.dataset == config.pretrained_dataset:
+        line = np.loadtxt(f'.\outputs\sw_{no}_{config.dataset}.txt')
+    else:
+        line = np.loadtxt(f'.\outputs\sw_{no}_{config.dataset}_{config.pretrained_dataset}.txt')
 
     # 用函数集扩充 Mssim
     Mssim = expand(Mssim)
@@ -96,11 +98,14 @@ def main(config):
         mat[co] = np.concatenate((row[:no], beta, [s, p]))
 
     # 保存结果到文件
-    np.savetxt(f'outputs\\results_{dataset}_no{no}.txt', mat, delimiter=',')
-
+    if config.dataset == config.pretrained_dataset:
+        np.savetxt(f'outputs\\results_{config.dataset}_no{no}.txt', mat, delimiter=',')
+    else:
+        np.savetxt(f'outputs\\results_{config.dataset}_{config.pretrained_dataset}_no{no}.txt', mat, delimiter=',')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
+    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
     config = parser.parse_args()
     main(config)
