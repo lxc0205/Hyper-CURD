@@ -97,15 +97,23 @@ def main(config):
         # 保存结果到矩阵
         mat[co] = np.concatenate((row[:no], beta, [s, p]))
 
+    sorted_indices = np.argsort(mat[:, 14], axis=0, kind='mergesort')[::-1]
+    sorted_indices = sorted_indices.reshape(-1, 1)
+    sorted_indices = np.tile(sorted_indices, (1, mat.shape[1]))
+    sorted_matrix = np.take_along_axis(mat, sorted_indices, axis=0)
+    mat = sorted_matrix
+
     # 保存结果到文件
     if config.dataset == config.pretrained_dataset:
-        np.savetxt(f'outputs\\results_{config.dataset}_no{no}.txt', mat, delimiter=',')
+        output_file = f'outputs\\results_{config.dataset}_no{no}.txt' 
     else:
-        np.savetxt(f'outputs\\results_{config.dataset}_{config.pretrained_dataset}_no{no}.txt', mat, delimiter=',')
+        output_file = f'outputs\\results_{config.dataset}_{config.pretrained_dataset}_no{no}.txt'
+    np.savetxt(output_file, mat, delimiter=',')
+    print("output to "+output_file)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
-    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='tid2013', help='Support datasets: livec|koniq-10k|bid|live|csiq|tid2013')
+    parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: koniq-10k|live|csiq|tid2013')
+    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
     config = parser.parse_args()
     main(config)
