@@ -3,6 +3,7 @@ experiment.xlsx
 *.mat
 *.pkl
 *.jpg
+*.zip
 curd/
 outputs/
 Database/

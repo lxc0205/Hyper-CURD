@@ -5,28 +5,11 @@ import numpy as np
 from tqdm import tqdm
 from scipy import stats
 from iqa import UIC_IQA, Hyper_IQA
+from utils import folder_path, img_num
 
 import warnings
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-folder_path = {
-    'live': './Database/LIVE/',
-    'csiq': './Database/CSIQ/',
-    'tid2013': './Database/TID2013/',
-    'livec': './Database/ChallengeDB_release/ChallengeDB_release/',
-    'koniq-10k': './Database/koniq-10k/',
-    'bid': './Database/BID/',
-}
-
-img_num = {
-    'live': list(range(0, 29)),
-    'csiq': list(range(0, 30)),
-    'tid2013': list(range(0, 25)),
-    'livec': list(range(0, 1162)),
-    'koniq-10k': list(range(0, 10073)),
-    'bid': list(range(0, 586)),
-}
 
 def saveLayerScore(file, layer_scores, label):
     for i in range(len(layer_scores)):

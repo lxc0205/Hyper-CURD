@@ -4,62 +4,13 @@ from tqdm import tqdm
 import numpy as np
 from itertools import combinations
 from scipy.linalg import det
-def expand(Mssim):
-    Mssim_expand = np.hstack((
-        Mssim, 
-        Mssim**2, 
-        np.sqrt(Mssim), 
-        Mssim**3, 
-        Mssim**(1/3), 
-        np.log(Mssim), 
-        np.power(2, Mssim), 
-        np.exp(Mssim)
-    ))
-    return Mssim_expand
-
-def loadtxt(file_path):
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
-    data = []
-    for line in lines:
-        fields = line.split('\t')[:-1]
-        float_fields = [float(field) for field in fields]
-        data.append(float_fields)
-    return np.array(data)
+from utils import expand, loadtxt, normalize 
 
 def conditional_uncorrelation(submatrix_num, submatrix_den):
     det_num= det(submatrix_num)
     det_den = det(submatrix_den)
     square_omega = det_num / det_den
     return square_omega
-
-def normalize(scores, datasets, new_min=0, new_max=1):
-    if datasets == 'csiq':
-        old_min = 0 
-        old_max = 1
-        dmos = True
-    elif datasets == 'live':
-        old_min = 0
-        old_max = 100
-        dmos = True
-    elif datasets == 'tid2013':
-        old_min = 0
-        old_max = 9
-        dmos = False
-    elif datasets == 'koniq-10k':
-        old_min = 0
-        old_max = 100
-        dmos = False
-    else:
-        print('wrong dataset name!')
-        return 0
-
-    # 计算归一化后的分数
-    if dmos:
-        output_scores = [(1-((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min)) for score in scores]    # 如果是 Dmos，则将分数取反
-    else:
-        output_scores = [((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min) for score in scores]
-    return output_scores
 
 def saveSquareOmega(file, combo, square_omega):
     for i in range(len(combo)):

@@ -1,22 +1,12 @@
 import argparse
 import numpy as np
+from utils import loadtxt
 
 def savedata(file, mat):
     for i in range(len(mat)):
         file.write(str(mat[i]))
         file.write('\t')
     file.write('\n')
-
-def loadtxt(file_path):
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
-    data = []
-    for line in lines:
-        fields = line.split('\t')[:-1]
-        float_fields = [float(field) for field in fields]
-        data.append(float_fields)
-    return np.array(data)
-
 def main(config):
     # 读取数据
     input_file = f"./outputs/curd outputs/sw_{config.file_name}.txt"
