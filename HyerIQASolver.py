@@ -119,4 +119,4 @@ class HyperIQASolver(object):
     
     def save(self, dataset):
         """Save the model."""
-        torch.save(self.model_hyper.state_dict(), dataset + '_pretrained.pkl')
+        torch.save(self.model_hyper.state_dict(), f'.\outputs\pretrained\{dataset}_pretrained.pkl')

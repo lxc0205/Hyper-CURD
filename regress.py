@@ -58,24 +58,52 @@ def loadtxt(file_path):
         data.append(float_fields)
     return np.array(data)
 
+def normalize(scores, datasets, new_min=0, new_max=1):
+    if datasets == 'csiq':
+        old_min = 0 
+        old_max = 1
+        dmos = True
+    elif datasets == 'live':
+        old_min = 0
+        old_max = 100
+        dmos = True
+    elif datasets == 'tid2013':
+        old_min = 0
+        old_max = 9
+        dmos = False
+    elif datasets == 'koniq-10k':
+        old_min = 0
+        old_max = 100
+        dmos = False
+    else:
+        print('wrong dataset name!')
+        return 0
+
+    # 计算归一化后的分数
+    if dmos:
+        output_scores = [(1-((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min)) for score in scores]    # 如果是 Dmos，则将分数取反
+    else:
+        output_scores = [((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min) for score in scores]
+    return output_scores
 
 def main(config):
     # 设置参数
     no = 7
     print(f"k = {no}")
 
-    Layerscore_Mos = loadtxt(f'.\outputs\{config.dataset}.txt')
+    Layerscore_Mos = loadtxt(f'./utputs/eval outputs/{config.dataset}.txt')
     mos = Layerscore_Mos[:, -1]
     Mssim = Layerscore_Mos[:, :-1]
 
     # 读取 index + sw 到 Line
     if config.dataset == config.pretrained_dataset:
-        line = np.loadtxt(f'.\outputs\sw_{no}_{config.dataset}.txt')
+        line = np.loadtxt(f'./outputs/sort outputs/sw_{config.dataset}.txt')
     else:
-        line = np.loadtxt(f'.\outputs\sw_{no}_{config.dataset}_{config.pretrained_dataset}.txt')
+        line = np.loadtxt(f'./outputs/sort outputs/sw_{config.dataset}_{config.pretrained_dataset}.txt')
 
     # 用函数集扩充 Mssim
     Mssim = expand(Mssim)
+    mos = normalize(mos, config.dataset)
 
     # 初始化矩阵
     mat = np.zeros((line.shape[0], 2 * no + 2))
@@ -88,16 +116,20 @@ def main(config):
         Mssim_s = Mssim[:, index]
 
         # 计算线性回归
-        x0 = Mssim_s - np.mean(Mssim_s, axis=0)
+        x0 = Mssim_s
+        # x0 = Mssim_s - np.mean(Mssim_s, axis=0)
         y = mos
+
         beta = np.linalg.inv(x0.T @ x0) @ (x0.T @ y)
-        yhat = x0 @ beta + np.mean(y)
+        # yhat = x0 @ beta + np.mean(y)
+        yhat = x0 @ beta
+ 
         s, p = calculate_sp(y, yhat)
 
         # 保存结果到矩阵
         mat[co] = np.concatenate((row[:no], beta, [s, p]))
 
-    sorted_indices = np.argsort(mat[:, 14], axis=0, kind='mergesort')[::-1]
+    sorted_indices = np.argsort(mat[:, 14]+mat[:, 15], axis=0, kind='mergesort')[::-1]
     sorted_indices = sorted_indices.reshape(-1, 1)
     sorted_indices = np.tile(sorted_indices, (1, mat.shape[1]))
     sorted_matrix = np.take_along_axis(mat, sorted_indices, axis=0)
@@ -105,9 +137,9 @@ def main(config):
 
     # 保存结果到文件
     if config.dataset == config.pretrained_dataset:
-        output_file = f'outputs\\results_{config.dataset}_no{no}.txt' 
+        output_file = f"./outputs/regress outputs/regress_{config.dataset}.txt" 
     else:
-        output_file = f'outputs\\results_{config.dataset}_{config.pretrained_dataset}_no{no}.txt'
+        output_file = f'./outputs/regress outputs/regress_{config.dataset}_{config.pretrained_dataset}.txt'
     np.savetxt(output_file, mat, delimiter=',')
     print("output to "+output_file)
 

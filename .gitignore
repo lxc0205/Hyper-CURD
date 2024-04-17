@@ -1,11 +1,12 @@
 experiment.xlsx
-run.sh
+*.sh
 *.mat
 *.pkl
 *.jpg
-curd/*
-!/curd/curd.cpp
+curd/
 outputs/
 Database/
 pretrained/
 data/
+__pycache__/
+.vscode/

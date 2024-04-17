@@ -17,6 +17,34 @@ def expand(Mssim):
     ))
     return Mssim_expand
 
+def normalize(scores, datasets, new_min=0, new_max=1):
+    if datasets == 'csiq':
+        old_min = 0 
+        old_max = 1
+        dmos = True
+    elif datasets == 'live':
+        old_min = 0
+        old_max = 100
+        dmos = True
+    elif datasets == 'tid2013':
+        old_min = 0
+        old_max = 9
+        dmos = False
+    elif datasets == 'koniq-10k':
+        old_min = 0
+        old_max = 100
+        dmos = False
+    else:
+        print('wrong dataset name!')
+        return 0
+
+    # 计算归一化后的分数
+    if dmos:
+        output_scores = [(1-((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min)) for score in scores]    # 如果是 Dmos，则将分数取反
+    else:
+        output_scores = [((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min) for score in scores]
+    return output_scores
+
 # CalculateSP函数的Python实现
 def calculate_sp(y, yhat):
     SROCC, _ = spearmanr(y, yhat)
@@ -35,12 +63,13 @@ def loadtxt(file_path):
 
 
 def main(config):
-    Layerscore_Mos = loadtxt(f'.\outputs\{config.dataset}.txt')
+    Layerscore_Mos = loadtxt(f'./outputs/eval outputs/{config.dataset}.txt')
     mos = Layerscore_Mos[:, -1]
     Mssim = Layerscore_Mos[:, :-1]
 
     # 用函数集扩充 Mssim
     Mssim = expand(Mssim)
+    mos = normalize(mos, config.dataset)
 
     beta = [float(x.strip()) for x in config.beta.split()]
     index = [int(x.strip()) for x in config.index.split()]
@@ -48,7 +77,8 @@ def main(config):
     Mssim_s = Mssim[:, index]
 
     # 计算线性回归
-    x0 = Mssim_s - np.mean(Mssim_s, axis=0)
+    # x0 = Mssim_s - np.mean(Mssim_s, axis=0)
+    x0 = Mssim_s
     y = mos
     yhat = x0 @ beta
 

@@ -72,9 +72,9 @@ def main(config):
         pred_scores = []
         gt_scores = []
         if config.dataset == config.pretrained_dataset:
-            outputs_path = "./outputs/" + config.dataset + ".txt"
+            outputs_path = f"./outputs/eval outputs/{config.dataset}.txt"
         else:
-            outputs_path = "./outputs/" + config.dataset + "_" + config.pretrained_dataset + ".txt"
+            outputs_path = f"./outputs/eval outputs/{config.dataset}_{config.pretrained_dataset}.txt"
             
         with open(outputs_path, "w") as file:
             for img, label in tqdm(data):# FloatTensor [1, 3, 224, 224],  FloatTensor [1]

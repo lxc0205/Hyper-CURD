@@ -29,7 +29,7 @@ class Hyper_IQA():
         # model
         self.model_hyper = models.HyperNet(16, 112, 224, 112, 56, 28, 14, 7).cuda()
         self.model_hyper.train(False)
-        self.model_hyper.load_state_dict((torch.load('./pretrained/' + dataset + '_pretrained.pkl')))
+        self.model_hyper.load_state_dict((torch.load('./outputs/pretrained/' + dataset + '_pretrained.pkl')))
 
 
     def model(self, img):
@@ -58,7 +58,7 @@ class UIC_IQA():
         super(UIC_IQA, self).__init__()
         self.model_hyper = models.HyperNet(16, 112, 224, 112, 56, 28, 14, 7).cuda()
         self.model_hyper.train(False)
-        self.model_hyper.load_state_dict((torch.load('./pretrained/' + dataset + '_pretrained.pkl')))
+        self.model_hyper.load_state_dict((torch.load('./outputs/pretrained/' + dataset + '_pretrained.pkl')))
 
     def extractFeature(self, img):
         img = torch.tensor(img).cuda()

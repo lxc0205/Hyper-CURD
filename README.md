@@ -1,44 +1,29 @@
 # Hyper-CURD
 
-This is the code of Hyper-CURD. Only for personal use.
-
 ## Dependencies
 
-- Python 3.6+
-- PyTorch 0.4+
-- TorchVision
-- scipy
+```
+pip install -r requirements.txt
+```
 
-### Training the baseline model on datasets (Original HyperIQA: training)
+## Usage
+
+### Training the baseline model (Original HyperIQA: training)
 
 ```
-python train.py --pretrained_dataset <dataset name>
+python train.py --pretrained_dataset <pretrained>
 ```
 
 Some available options:
 * `--pretrained_dataset`: Training dataset, support datasets: koniq-10k | live | csiq | tid2013.
 
 Outputs:
-* pkl file: .\pretrained\\<pretrained_dataset>.pkl
+* `pkl`: .\outputs\pretrained\\\<pretrained>.pkl
 
-### Testing the baseline model on Dataset (Original HyperIQA: testing)
-
-```
-python eval.py --dataset <dataset name> --pretrained_dataset <dataset name> --curd False
-```
-
-Some available options:
-* `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
-* `--pretrained_dataset`: Select the pretrained model.
-* `--curd`: The flag of using curd.
-
-Outputs:
-* print SRCC and PLCC
-
-### Testing the baseline model on Dataset and geting the layer scores by VGG
+### Testing the baseline model (Original HyperIQA: testing)
 
 ```
-python eval.py --dataset <dataset name> --pretrained_dataset <dataset name> --curd True
+python eval.py --dataset <dataset> --pretrained_dataset <pretrained> --curd False
 ```
 
 Some available options:
@@ -47,38 +32,65 @@ Some available options:
 * `--curd`: The flag of using curd.
 
 Outputs:
-* layer score file: \<dataset>.txt or \<dataset>_<pretrained_dataset>.txt
+* print `SRCC` and `PLCC`
+
+### Testing the baseline model and geting the layer scores
+
+```
+python eval.py --dataset <dataset> --pretrained_dataset <pretrained> --curd True
+```
+
+Some available options:
+* `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
+* `--pretrained_dataset`: Select the pretrained model.
+* `--curd`: The flag of using curd.
+
+Outputs:
+* `layer scores`: .\outputs\eval outputs\\\<dataset>.txt or .\outputs\eval outputs\\\<dataset>_\<pretrained>.txt
 
 ### Curd layer selecting
 
 ```
-curd/curd.cpp
+python curd.py --file_name <file name>
 ```
 
 Some available options:
-* `file_name`: Layer score file name.
+* `--file_name`: The name of the layer scores in eval output directory.
 
 Outputs:
-* sw line flie: sw_\<no>\_\<dataset>.txt or sw_\<no>\_\<dataset>_<pretrained_dataset>.txt
+* `sw flie`: .\outputs\curd outputs\sw_\<file name>.txt
+
+### Sort the curd outputs
+
+```
+python sort.py --file_name <file name> --order <True or False> --save_num <save numbers>
+```
+
+Some available options:
+* `--file_name`: Input file name.
+* `--order`: Ascending(True) or descending(False).
+* `--save_num`: Save numbers, default number is 50000.
+
+Outputs:
+* `sorted sw flie`: .\outputs\sort outputs\sw_\<file name>_sorted.txt
 
 ### Regression
 
 ```
-python regress.py --dataset  <dataset name> --pretrained_dataset <dataset name>
+python regress.py --dataset  <dataset> --pretrained_dataset <pretrained>
 ```
 
 Some available options:
-* `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
-* `--pretrained_dataset`: The pretrained model, for select sw line file.
+* `--dataset`: Regression dataset, support datasets:  koniq-10k | live | csiq | tid2013.
+* `--pretrained_dataset`: The pretrained model, for select sw file.
 
 Outputs:
-* regression result file: outputs\results\_\<dataset>\_no\<no>.txt or outputs\results\_\<dataset>\_\<pretrained_dataset>\_no\<no>.txt
+* `regression ouptuts file`: .\outputs\regress outputs\regress\_\<dataset>.txt or .\outputs\regress outputs\regress\_\<dataset>\_\<pretrained_dataset>.txt
 
-Some available options:
-* `--dataset`: CURD training dataset, support datasets:  koniq-10k | live | csiq | tid2013.
+### Nonliear function
 
 ```
-python nonliear.py --dataset tid2013 --beta '1.61 0.19 -1.10 -7.78 -0.139 23.921 0.038' --index '0 1 2 3 10 15 47'
+python nonliear.py --beta <'1.61 0.19 -1.10 -7.78 -0.139 23.921 0.038'> --index <'0 1 2 3 10 15 47'> --dataset tid2013
 ```
 
 Some available options:
