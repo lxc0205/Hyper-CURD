@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from utils import expand, calculate_sp, loadtxt, normalize
+from utils import calculate_sp, loadtxt, sort
 from tqdm import tqdm
 def savedata(file, mat, no):
     for i in range(len(mat)):
@@ -10,11 +10,8 @@ def savedata(file, mat, no):
             file.write(str(mat[i]))
         file.write('\t')
     file.write('\n')
-def main(config):
-
-    Layerscore_Mos = loadtxt(f'./outputs/eval outputs/{config.dataset}.txt')
-    mos = Layerscore_Mos[:, -1]
-    Mssim = Layerscore_Mos[:, :-1]
+def main(config, no = 7):
+    Mssim, mos = loadtxt(f'./outputs/eval outputs/{config.dataset}.txt', config.dataset, config.pretrained_dataset)
 
     # 读取 index + sw 到 Line
     if config.dataset == config.pretrained_dataset:
@@ -22,12 +19,7 @@ def main(config):
     else:
         line = np.loadtxt(f'./outputs/sort outputs/sw_{config.dataset}_{config.pretrained_dataset}_sorted.txt')
 
-    # 用函数集扩充 Mssim
-    Mssim = expand(Mssim)
-    mos = normalize(mos, config.dataset)
-
     # 初始化矩阵
-    no = 7
     mat = np.zeros((line.shape[0], 2 * no + 2))
 
     for co, row in tqdm(enumerate(line)):
@@ -50,11 +42,7 @@ def main(config):
         mat[co] = np.concatenate((row[:no], beta, [s, p]))
     
     # 按照srcc排序
-    # sorted_indices = np.argsort(mat[:, 14], axis=0, kind='mergesort')[::-1]
-    # sorted_indices = sorted_indices.reshape(-1, 1)
-    # sorted_indices = np.tile(sorted_indices, (1, mat.shape[1]))
-    # sorted_matrix = np.take_along_axis(mat, sorted_indices, axis=0)
-    # mat = sorted_matrix
+    # mat = sort(mat, order=False, row=14)
 
     # 保存结果到文件
     if config.dataset == config.pretrained_dataset:

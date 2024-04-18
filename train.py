@@ -1,6 +1,5 @@
 import os
 import argparse
-import warnings
 import random
 import numpy as np
 from HyerIQASolver import HyperIQASolver
@@ -8,7 +7,6 @@ from utils import folder_path, img_num
 
 
 def main(config):
-    warnings.filterwarnings("ignore")
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
     sel_num = img_num[config.pretrained_dataset]

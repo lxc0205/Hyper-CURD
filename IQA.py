@@ -31,7 +31,6 @@ class Hyper_IQA():
         self.model_hyper.train(False)
         self.model_hyper.load_state_dict((torch.load('./outputs/pretrained/' + dataset + '_pretrained.pkl')))
 
-
     def model(self, img):
         img = torch.tensor(img).cuda()
         # 随机计算十次计算平均scores
@@ -47,10 +46,7 @@ class Hyper_IQA():
             # Quality prediction
             pred = model_target(paras['target_in_vec'])  # 'paras['target_in_vec']' is the input to target net
             pred_scores.append(float(pred.item()))
-        score = np.mean(pred_scores)
-
-        # print('Final quality score: %.2f' % final_score) 
-        return score
+        return np.mean(pred_scores)
 
 
 class UIC_IQA():

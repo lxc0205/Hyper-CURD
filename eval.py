@@ -1,19 +1,16 @@
 import os
-import warnings
 import argparse
 import data_loader
 import numpy as np
 from tqdm import tqdm
-from scipy import stats
 from iqa import UIC_IQA, Hyper_IQA
-from utils import folder_path, img_num, savedata
+from utils import folder_path, img_num, calculate_sp, savedata
 
 
 def main(config):
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-    warnings.filterwarnings("ignore")
 
-    print('Testing on %s dataset' % (config.dataset))
+    print('Testing on %s dataset, based on %s pretrained model' % (config.dataset, config.pretrained_dataset))
     
     # IQA方法
     U = UIC_IQA(config.pretrained_dataset)
@@ -28,7 +25,7 @@ def main(config):
         # 原方案
         pred_scores = []
         gt_scores = []
-        for img, label in tqdm(data): # FloatTensor [1, 3, 224, 224],  FloatTensor [1]
+        for img, label in tqdm(data):
 
             score = H.model(img)
 
@@ -37,8 +34,7 @@ def main(config):
 
         pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, config.patch_num)), axis=1)
         gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, config.patch_num)), axis=1)
-        srcc, _ = stats.spearmanr(pred_scores, gt_scores)
-        plcc, _ = stats.pearsonr(pred_scores, gt_scores)
+        srcc, plcc = calculate_sp(pred_scores, gt_scores)
 
         print('Testing median SRCC %4.4f,\tmedian PLCC %4.4f' % (srcc, plcc))
 
@@ -62,8 +58,7 @@ def main(config):
 
         pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, config.patch_num)), axis=1)
         gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, config.patch_num)), axis=1)
-        srcc, _ = stats.spearmanr(pred_scores, gt_scores)
-        plcc, _ = stats.pearsonr(pred_scores, gt_scores)
+        srcc, plcc = calculate_sp(pred_scores, gt_scores)
 
         print('Testing median SRCC %4.4f,\tmedian PLCC %4.4f' % (srcc, plcc))
 

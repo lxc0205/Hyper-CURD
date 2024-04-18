@@ -27,6 +27,22 @@ def expand(Mssim):
         (np.exp(Mssim)-1) / (np.exp(1)-1)
     ))
     return Mssim_expand
+def normalize_Mssim(Mssim, datasets):
+    if datasets == 'csiq':
+        limit = 1
+    elif datasets == 'live':
+        limit = 100
+    elif datasets == 'tid2013':
+        limit = 9
+    elif datasets == 'koniq-10k':
+        limit = 100
+    else:
+        print('wrong dataset name!')
+    
+    Mssim = Mssim / limit
+    Mssim = np.where(Mssim < 0, 1e-4, Mssim)
+    Mssim = np.where(Mssim > 1, 1, Mssim)
+    return Mssim
 
 def normalize_mos(scores, datasets, new_min=0, new_max=1):
     if datasets == 'csiq':
@@ -61,7 +77,7 @@ def calculate_sp(y, yhat):
     PLCC, _ = pearsonr(y, yhat)
     return SROCC, PLCC
 
-def loadtxt(file_path):
+def loadtxt(file_path, dataset, pretrained_dataset):
     with open(file_path, 'r') as f:
         lines = f.readlines()
     data = []
@@ -69,7 +85,19 @@ def loadtxt(file_path):
         fields = line.split('\t')[:-1]
         float_fields = [float(field) for field in fields]
         data.append(float_fields)
-    return np.array(data)
+    data = np.array(data)
+    
+    mos = data[:, -1]
+    Mssim = data[:, :-1]
+
+    # 预处理
+    Mssim = normalize_Mssim(Mssim, pretrained_dataset) # 归一化到0-1
+    Mssim = expand(Mssim) # 用函数集扩充 Mssim
+    mos = normalize_mos(mos, dataset) # 归一化到0-1
+    mos = np.array(mos)
+    mos = mos[:, np.newaxis]
+
+    return Mssim, mos
 
 def savedata(file, vector, label):
     for i in range(len(vector)):
@@ -79,6 +107,15 @@ def savedata(file, vector, label):
     file.write('\t')
     file.write('\n')
 
+def sort(data, order, row):
+    if order:
+        sorted_indices = np.argsort(data[:, row], axis=0, kind='mergesort')
+    else:
+        sorted_indices = np.argsort(data[:, row], axis=0, kind='mergesort')[::-1]
+    sorted_indices = sorted_indices.reshape(-1, 1)
+    sorted_indices = np.tile(sorted_indices, (1, data.shape[1]))
+    sorted_matrix = np.take_along_axis(data, sorted_indices, axis=0)
+    return sorted_matrix
 
 folder_path = {
     'live': './Database/LIVE/',

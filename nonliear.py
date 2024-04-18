@@ -1,18 +1,11 @@
 import argparse
 import numpy as np
-from scipy.stats import spearmanr, pearsonr
 import matplotlib.pyplot as plt
-from utils import expand, normalize, calculate_sp, loadtxt
+from utils import calculate_sp, loadtxt
 
 
 def main(config):
-    Layerscore_Mos = loadtxt(f'./outputs/eval outputs/{config.dataset}.txt')
-    mos = Layerscore_Mos[:, -1]
-    Mssim = Layerscore_Mos[:, :-1]
-
-    # 用函数集扩充 Mssim
-    Mssim = expand(Mssim)
-    mos = normalize(mos, config.dataset)
+    Mssim, mos = loadtxt(f'./outputs/eval outputs/{config.dataset}.txt', config.dataset, config.pretrained_dataset)
 
     beta = [float(x.strip()) for x in config.beta.split()]
     index = [int(x.strip()) for x in config.index.split()]

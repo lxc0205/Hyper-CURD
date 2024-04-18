@@ -51,27 +51,17 @@ Outputs:
 ### Curd layer selecting
 
 ```
-python curd.py --file_name <file name>
+python curd.py --dataset <dataset> --pretrained_dataset <pretrained> --order <True or False> --save_num <save numbers>
 ```
 
 Some available options:
-* `--file_name`: The name of the layer scores in eval output directory.
-
-Outputs:
-* `sw flie`: .\outputs\curd outputs\sw_\<file name>.txt
-
-### Sort the curd outputs
-
-```
-python sort.py --file_name <file name> --order <True or False> --save_num <save numbers>
-```
-
-Some available options:
-* `--file_name`: Input file name.
-* `--order`: Ascending(True) or descending(False).
+* `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
+* `--pretrained_dataset`: Select the pretrained model.
+* `--order`: Sort the output results: Ascending(True) or descending(False).
 * `--save_num`: Save numbers, default number is 50000.
 
 Outputs:
+* `sw flie`: .\outputs\curd outputs\sw_\<file name>.txt
 * `sorted sw flie`: .\outputs\sort outputs\sw_\<file name>_sorted.txt
 
 ### Regression
@@ -90,7 +80,7 @@ Outputs:
 ### Nonliear function
 
 ```
-python nonliear.py --beta <'1.61 0.19 -1.10 -7.78 -0.139 23.921 0.038'> --index <'0 1 2 3 10 15 47'> --dataset tid2013
+python nonliear.py --beta '1.61 0.19 -1.10 -7.78 -0.139 23.921 0.038' --index '0 1 2 3 10 15 47' --dataset tid2013
 ```
 
 Some available options:
