@@ -1,17 +1,16 @@
 import os
 import argparse
+import warnings
 import random
 import numpy as np
 from HyerIQASolver import HyperIQASolver
 from utils import folder_path, img_num
 
-import warnings
-warnings.filterwarnings("ignore")
-
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 
 def main(config):
+    warnings.filterwarnings("ignore")
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
     sel_num = img_num[config.pretrained_dataset]
 
     srcc_all = np.zeros(config.train_test_num, dtype=np.float)

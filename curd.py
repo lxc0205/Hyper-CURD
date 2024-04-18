@@ -4,21 +4,13 @@ from tqdm import tqdm
 import numpy as np
 from itertools import combinations
 from scipy.linalg import det
-from utils import expand, loadtxt, normalize 
+from utils import expand, loadtxt, savedata, normalize 
 
 def conditional_uncorrelation(submatrix_num, submatrix_den):
     det_num= det(submatrix_num)
     det_den = det(submatrix_den)
     square_omega = det_num / det_den
     return square_omega
-
-def saveSquareOmega(file, combo, square_omega):
-    for i in range(len(combo)):
-        file.write(str(combo[i]))
-        file.write('\t')
-    file.write(str(square_omega))
-    file.write('\t')
-    file.write('\n')
 
 def main(config):
     k = 7
@@ -68,7 +60,7 @@ def main(config):
                 print(e)
 
             # 写入当前行，'\n'代表换行符
-            saveSquareOmega(file, combo, square_omega)
+            savedata(file, combo, square_omega)
 
     # 记录结束时间
     end_time = time.time()

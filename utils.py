@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import spearmanr, pearsonr
 # Expand函数的Python实现
-def expand(Mssim):
+def expand_old(Mssim):
     Mssim_expand = np.hstack((
         Mssim, 
         Mssim**2, 
@@ -14,33 +14,21 @@ def expand(Mssim):
     ))
     return Mssim_expand
 
-def expand_cross(Mssim):
-    # 计算 Mssim 的各种变换
-    Mssim0 = np.hstack((
-        Mssim,
-        Mssim**2,
-        np.sqrt(Mssim),
-        Mssim**3,
-        Mssim**(1/3),
-        np.log(Mssim),
-        2**Mssim,
-        np.exp(Mssim)
+# x in [0, 1], y in [0, 1]
+def expand(Mssim):
+    Mssim_expand = np.hstack((
+        Mssim, 
+        Mssim**2, 
+        np.sqrt(Mssim), 
+        Mssim**3, 
+        Mssim**(1/3), 
+        np.log(Mssim+1) / np.log(2), 
+        np.power(2, Mssim) - 1, 
+        (np.exp(Mssim)-1) / (np.exp(1)-1)
     ))
-
-    # 初始化 Mssim_add 为空数组
-    Mssim_add = []
-
-    # 计算 Mssim0 中每一列的乘积
-    for x_i in range(Mssim0.shape[1]):
-        for y_i in range(x_i + 1, Mssim0.shape[1]):
-            Mssim_add.append(Mssim0[:, x_i] * Mssim0[:, y_i])
-
-    # 将计算结果转换为 NumPy 数组并添加到 Mssim_expand 中
-    Mssim_expand = np.hstack((Mssim0, np.array(Mssim_add).T))
-
     return Mssim_expand
 
-def normalize(scores, datasets, new_min=0, new_max=1):
+def normalize_mos(scores, datasets, new_min=0, new_max=1):
     if datasets == 'csiq':
         old_min = 0 
         old_max = 1
@@ -82,6 +70,15 @@ def loadtxt(file_path):
         float_fields = [float(field) for field in fields]
         data.append(float_fields)
     return np.array(data)
+
+def savedata(file, vector, label):
+    for i in range(len(vector)):
+        file.write(str(vector[i]))
+        file.write('\t')
+    file.write(str(label))
+    file.write('\t')
+    file.write('\n')
+
 
 folder_path = {
     'live': './Database/LIVE/',

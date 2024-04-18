@@ -1,26 +1,18 @@
 import os
+import warnings
 import argparse
 import data_loader
 import numpy as np
 from tqdm import tqdm
 from scipy import stats
 from iqa import UIC_IQA, Hyper_IQA
-from utils import folder_path, img_num
+from utils import folder_path, img_num, savedata
 
-import warnings
-
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-def saveLayerScore(file, layer_scores, label):
-    for i in range(len(layer_scores)):
-        file.write(str(layer_scores[i]))
-        file.write('\t')
-    file.write(str(float(label.numpy())))
-    file.write('\t')
-    file.write('\n')
 
 def main(config):
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     warnings.filterwarnings("ignore")
+
     print('Testing on %s dataset' % (config.dataset))
     
     # IQA方法
@@ -63,7 +55,7 @@ def main(config):
             for img, label in tqdm(data):# FloatTensor [1, 3, 224, 224],  FloatTensor [1]
 
                 layer_scores, score = U.model(img)
-                saveLayerScore(file, layer_scores, label) # 保存层分数
+                savedata(file, layer_scores, float(label.numpy())) # 保存层分数
 
                 pred_scores.append(float(score.item()))
                 gt_scores = gt_scores + label.tolist()
