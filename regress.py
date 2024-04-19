@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from utils import calculate_sp, loadtxt, sort
+from utils import calculate_sp, loaddata, sort
 from tqdm import tqdm
 def savedata(file, mat, no):
     for i in range(len(mat)):
@@ -11,7 +11,7 @@ def savedata(file, mat, no):
         file.write('\t')
     file.write('\n')
 def main(config, no = 7):
-    Mssim, mos = loadtxt(f'./outputs/eval outputs/{config.dataset}.txt', config.dataset, config.pretrained_dataset)
+    Mssim, mos = loaddata(f'./outputs/eval outputs/{config.dataset}.txt', config.dataset, config.pretrained_dataset)
 
     # 读取 index + sw 到 Line
     if config.dataset == config.pretrained_dataset:

@@ -77,7 +77,17 @@ def calculate_sp(y, yhat):
     PLCC, _ = pearsonr(y, yhat)
     return SROCC, PLCC
 
-def loadtxt(file_path, dataset, pretrained_dataset):
+def loadtxt(file_path):
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+    data = []
+    for line in lines:
+        fields = line.split('\t')[:-1]
+        float_fields = [float(field) for field in fields]
+        data.append(float_fields)
+    data = np.array(data)
+    return data
+def loaddata(file_path, dataset, pretrained_dataset):
     with open(file_path, 'r') as f:
         lines = f.readlines()
     data = []

@@ -1,11 +1,11 @@
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import calculate_sp, loadtxt
+from utils import calculate_sp, loaddata
 
 
 def main(config):
-    Mssim, mos = loadtxt(f'./outputs/eval outputs/{config.dataset}.txt', config.dataset, config.pretrained_dataset)
+    Mssim, mos = loaddata(f'./outputs/eval outputs/{config.dataset}.txt', config.dataset, config.pretrained_dataset)
 
     beta = [float(x.strip()) for x in config.beta.split()]
     index = [int(x.strip()) for x in config.index.split()]

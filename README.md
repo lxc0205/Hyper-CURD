@@ -3,6 +3,8 @@
 ## Dependencies
 
 ```
+conda create -n curd python=3.8.18
+conda activate curd
 pip install -r requirements.txt
 ```
 
