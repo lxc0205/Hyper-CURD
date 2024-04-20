@@ -4,8 +4,6 @@ import random
 import numpy as np
 from HyerIQASolver import HyperIQASolver
 from utils import folder_path, img_num
-
-
 def main(config):
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 

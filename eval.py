@@ -4,9 +4,7 @@ import data_loader
 import numpy as np
 from tqdm import tqdm
 from iqa import UIC_IQA, Hyper_IQA
-from utils import folder_path, img_num, calculate_sp, savedata
-
-
+from utils import folder_path, img_num, calculate_sp, savedata_withlabel
 def main(config):
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
@@ -42,25 +40,15 @@ def main(config):
         # 新方案
         pred_scores = []
         gt_scores = []
-        if config.dataset == config.pretrained_dataset:
-            outputs_path = f"./outputs/eval outputs/{config.dataset}.txt"
-        else:
-            outputs_path = f"./outputs/eval outputs/{config.dataset}_{config.pretrained_dataset}.txt"
             
-        with open(outputs_path, "w") as file:
+        with open(f"./outputs/eval outputs/{config.dataset}_{config.pretrained_dataset}.txt", "w") as file:
             for img, label in tqdm(data):# FloatTensor [1, 3, 224, 224],  FloatTensor [1]
 
                 layer_scores, score = U.model(img)
-                savedata(file, layer_scores, float(label.numpy())) # 保存层分数
+                savedata_withlabel(file, layer_scores, float(label.numpy())) # 保存层分数
 
                 pred_scores.append(float(score.item()))
                 gt_scores = gt_scores + label.tolist()
-
-        pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, config.patch_num)), axis=1)
-        gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, config.patch_num)), axis=1)
-        srcc, plcc = calculate_sp(pred_scores, gt_scores)
-
-        print('Testing median SRCC %4.4f,\tmedian PLCC %4.4f' % (srcc, plcc))
 
 
 if __name__ == '__main__':

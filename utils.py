@@ -1,20 +1,7 @@
 import numpy as np
 from scipy.stats import spearmanr, pearsonr
-# Expand函数的Python实现
-def expand_old(Mssim):
-    Mssim_expand = np.hstack((
-        Mssim, 
-        Mssim**2, 
-        np.sqrt(Mssim), 
-        Mssim**3, 
-        Mssim**(1/3), 
-        np.log(Mssim), 
-        np.power(2, Mssim), 
-        np.exp(Mssim)
-    ))
-    return Mssim_expand
 
-# x in [0, 1], y in [0, 1]
+# Expand函数的Python实现 Mssim -> Mssim_expand: [0, 1] -> [0, 1]
 def expand(Mssim):
     Mssim_expand = np.hstack((
         Mssim, 
@@ -25,22 +12,31 @@ def expand(Mssim):
         np.log(Mssim+1) / np.log(2), 
         np.power(2, Mssim) - 1, 
         (np.exp(Mssim)-1) / (np.exp(1)-1)
+
+        # Mssim, 
+        # Mssim**2, 
+        # np.sqrt(Mssim), 
+        # Mssim**3, 
+        # Mssim**(1/3), 
+        # np.log(Mssim), 
+        # np.power(2, Mssim), 
+        # np.exp(Mssim)
     ))
     return Mssim_expand
 def normalize_Mssim(Mssim, datasets):
     if datasets == 'csiq':
-        limit = 1
+        max_limit = 1
     elif datasets == 'live':
-        limit = 100
+        max_limit = 100
     elif datasets == 'tid2013':
-        limit = 9
+        max_limit = 9
     elif datasets == 'koniq-10k':
-        limit = 100
+        max_limit = 100
     else:
         print('wrong dataset name!')
     
-    Mssim = Mssim / limit
-    Mssim = np.where(Mssim < 0, 1e-4, Mssim)
+    Mssim = Mssim / max_limit
+    Mssim = np.where(Mssim < 0, 1e-8, Mssim)
     Mssim = np.where(Mssim > 1, 1, Mssim)
     return Mssim
 
@@ -70,14 +66,15 @@ def normalize_mos(scores, datasets, new_min=0, new_max=1):
         output_scores = [(1-((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min)) for score in scores]    # 如果是 Dmos，则将分数取反
     else:
         output_scores = [((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min) for score in scores]
-    return output_scores
+    return np.array(output_scores)
 
 def calculate_sp(y, yhat):
     SROCC, _ = spearmanr(y, yhat)
+
     PLCC, _ = pearsonr(y, yhat)
     return SROCC, PLCC
 
-def loadtxt(file_path):
+def loaddata(file_path):
     with open(file_path, 'r') as f:
         lines = f.readlines()
     data = []
@@ -87,7 +84,7 @@ def loadtxt(file_path):
         data.append(float_fields)
     data = np.array(data)
     return data
-def loaddata(file_path, dataset, pretrained_dataset):
+def loadMssimMos(file_path, dataset, pretrained_dataset):
     with open(file_path, 'r') as f:
         lines = f.readlines()
     data = []
@@ -96,20 +93,18 @@ def loaddata(file_path, dataset, pretrained_dataset):
         float_fields = [float(field) for field in fields]
         data.append(float_fields)
     data = np.array(data)
-    
-    mos = data[:, -1]
-    Mssim = data[:, :-1]
 
     # 预处理
+    mos = data[:, -1]
+    Mssim = data[:, :-1]
     Mssim = normalize_Mssim(Mssim, pretrained_dataset) # 归一化到0-1
     Mssim = expand(Mssim) # 用函数集扩充 Mssim
     mos = normalize_mos(mos, dataset) # 归一化到0-1
-    mos = np.array(mos)
     mos = mos[:, np.newaxis]
 
     return Mssim, mos
 
-def savedata(file, vector, label):
+def savedata_withlabel(file, vector, label):
     for i in range(len(vector)):
         file.write(str(vector[i]))
         file.write('\t')
@@ -117,6 +112,20 @@ def savedata(file, vector, label):
     file.write('\t')
     file.write('\n')
 
+def savedata(file, mat):
+    for i in range(len(mat)):
+        file.write(str(mat[i]))
+        file.write('\t')
+    file.write('\n')
+
+def savedata_intfloat(file, mat, no):
+    for i in range(len(mat)):
+        if i < no:
+            file.write(str(int(mat[i])))
+        else:
+            file.write(str(mat[i]))
+        file.write('\t')
+    file.write('\n')
 def sort(data, order, row):
     if order:
         sorted_indices = np.argsort(data[:, row], axis=0, kind='mergesort')
