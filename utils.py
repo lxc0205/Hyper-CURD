@@ -4,23 +4,14 @@ from scipy.stats import spearmanr, pearsonr
 # Expand函数的Python实现 Mssim -> Mssim_expand: [0, 1] -> [0, 1]
 def expand(Mssim):
     Mssim_expand = np.hstack((
-        Mssim, 
-        Mssim**2, 
-        np.sqrt(Mssim), 
-        Mssim**3, 
-        Mssim**(1/3), 
-        np.log(Mssim+1) / np.log(2), 
-        np.power(2, Mssim) - 1, 
-        (np.exp(Mssim)-1) / (np.exp(1)-1)
-
-        # Mssim, 
-        # Mssim**2, 
-        # np.sqrt(Mssim), 
-        # Mssim**3, 
-        # Mssim**(1/3), 
-        # np.log(Mssim), 
-        # np.power(2, Mssim), 
-        # np.exp(Mssim)
+        Mssim,                              # Mssim
+        Mssim**2,                           # Mssim**2,
+        np.sqrt(Mssim),                     # np.sqrt(Mssim)
+        Mssim**3,                           # Mssim**3
+        Mssim**(1/3),                       # Mssim**(1/3)
+        np.log(Mssim+1) / np.log(2),        # np.log(Mssim)
+        np.power(2, Mssim) - 1,             # np.power(2, Mssim)
+        (np.exp(Mssim)-1) / (np.exp(1)-1)   # np.exp(Mssim)
     ))
     return Mssim_expand
 def normalize_Mssim(Mssim, datasets):

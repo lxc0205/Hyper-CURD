@@ -1,3 +1,4 @@
+import os
 import math
 import argparse
 import numpy as np
@@ -6,14 +7,13 @@ from itertools import combinations
 from scipy.linalg import det
 from utils import loaddata, loadMssimMos, savedata_withlabel, savedata, sort
 
+
 def main(config, no = 7, threshold = 0.9999):
 
     print('curd: %s_%s' % (config.dataset, config.pretrained_dataset))
 
-    Mssim, mos = loadMssimMos(f"./outputs/eval outputs/{config.dataset}_{config.pretrained_dataset}.txt", config.dataset, config.pretrained_dataset)
-
+    Mssim, mos = loadMssimMos(f"./outputs/hyperIQA outputs/{config.dataset}_{config.pretrained_dataset}.txt", config.dataset, config.pretrained_dataset)
     data = np.transpose(np.concatenate((Mssim, mos), axis=1))
-  
     R = np.abs(np.corrcoef(data))
 
     with open(f"./outputs/curd outputs/sw_{config.dataset}_{config.pretrained_dataset}.txt", 'w') as file:
@@ -40,13 +40,14 @@ def main(config, no = 7, threshold = 0.9999):
             savedata_withlabel(file, combo, square_omega) # 写入当前行
 
     # 排序
-    print(f"Start sorting....")
-    data = loaddata(f"./outputs/curd outputs/sw_{config.dataset}_{config.pretrained_dataset}.txt")
-    with open(f"./outputs/sort outputs/sw_{config.dataset}_{config.pretrained_dataset}_sorted.txt", 'w') as file:
+    dir = f"./outputs/curd outputs/sw_{config.dataset}_{config.pretrained_dataset}.txt"
+    data = loaddata(dir)
+    os.remove(dir)
+    with open(dir, 'w') as file:
         sorted_matrix = sort(data, config.order, row=7)
         for i in range(config.save_num):
             savedata(file, sorted_matrix[i,:])
-    print(f"Sort finished!\n")
+    print(f"Curd finished!\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
