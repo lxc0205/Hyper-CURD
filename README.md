@@ -13,7 +13,7 @@ pip install -r requirements.txt
 ### Training the baseline model (Original HyperIQA: training)
 
 ```
-python train.py --pretrained_dataset <pretrained>
+python hyperTrain.py --pretrained_dataset <pretrained>
 ```
 
 Some available options:
@@ -22,35 +22,25 @@ Some available options:
 Outputs:
 * `pkl`: .\outputs\pretrained\\\<pretrained>.pkl
 
-### Testing the baseline model (Original HyperIQA: testing)
+
+### Testing the baseline model (Original HyperIQA: testing) and geting the layer scores (For CURD)
 
 ```
-python eval.py --dataset <dataset> --pretrained_dataset <pretrained> --curd False
-```
-
-Some available options:
-* `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
-* `--pretrained_dataset`: Select the pretrained model.
-* `--curd`: The flag of using curd.
-
-Outputs:
-* print `SRCC` and `PLCC`
-
-### Testing the baseline model and geting the layer scores
-
-```
-python eval.py --dataset <dataset> --pretrained_dataset <pretrained> --curd True
+python hyperIQA.py --dataset <dataset> --pretrained_dataset <pretrained> --curd <True or False>
 ```
 
 Some available options:
 * `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
 * `--pretrained_dataset`: Select the pretrained model.
-* `--curd`: The flag of using curd.
+* `--curd`: The flag of using curd, False represents the original HyperIQA.
+
 
 Outputs:
-* `layer scores`: .\outputs\eval outputs\\\<dataset>.txt or .\outputs\eval outputs\\\<dataset>_\<pretrained>.txt
+* `curd=False`: print `SRCC` and `PLCC`
 
-### Curd layer selecting
+* `curd=True, layer scores`: .\outputs\hyperIQA outputs\\\<dataset>.txt or .\outputs\hyperIQA outputs\\\<dataset>_\<pretrained>.txt
+
+### Curd
 
 ```
 python curd.py --dataset <dataset> --pretrained_dataset <pretrained> --order <True or False> --save_num <save numbers>
@@ -63,26 +53,13 @@ Some available options:
 * `--save_num`: Save numbers, default number is 50000.
 
 Outputs:
-* `sw flie`: .\outputs\curd outputs\sw_\<file name>.txt
-* `sorted sw flie`: .\outputs\sort outputs\sw_\<file name>_sorted.txt
+* `sorted sw flie`: .\outputs\curd outputs\sw_\<file name>.txt
+* `fitting ouptuts file`: .\outputs\curd outputs\fitting\_\<dataset>.txt or .\outputs\curd outputs\fitting\_\<dataset>\_\<pretrained_dataset>.txt
 
-### Regression
-
-```
-python regress.py --dataset  <dataset> --pretrained_dataset <pretrained>
-```
-
-Some available options:
-* `--dataset`: Regression dataset, support datasets:  koniq-10k | live | csiq | tid2013.
-* `--pretrained_dataset`: The pretrained model, for select sw file.
-
-Outputs:
-* `regression ouptuts file`: .\outputs\regress outputs\regress\_\<dataset>.txt or .\outputs\regress outputs\regress\_\<dataset>\_\<pretrained_dataset>.txt
-
-### Nonliear function
+### Nonliear prediction
 
 ```
-python nonliear.py --beta '1.61 0.19 -1.10 -7.78 -0.139 23.921 0.038' --index '0 1 2 3 10 15 47' --dataset tid2013
+python prediction.py --beta '1.61 0.19 -1.10 -7.78 -0.139 23.921 0.038' --index '0 1 2 3 10 15 47' --dataset tid2013
 ```
 
 Some available options:

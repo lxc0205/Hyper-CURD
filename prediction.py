@@ -1,7 +1,7 @@
 import argparse
 from utils import calculate_sp, loadMssimMos
 def main(config):
-    Mssim, mos = loadMssimMos(f'./outputs/fitting outputs/{config.dataset}_{config.pretrained_dataset}.txt', config.dataset, config.pretrained_dataset)
+    Mssim, mos = loadMssimMos(f'./outputs/hyperIQA outputs/{config.dataset}_{config.pretrained_dataset}.txt', config.dataset, config.pretrained_dataset)
 
     beta = [float(x.strip()) for x in config.beta.split()]
     index = [int(x.strip()) for x in config.index.split()]
