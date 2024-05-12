@@ -5,7 +5,7 @@ from scipy.stats import spearmanr, pearsonr
 def expand(Mssim):
     Mssim_expand = np.hstack((
         Mssim,                              # Mssim
-        Mssim**2,                           # Mssim**2,
+        Mssim**2,                           # Mssim**2
         np.sqrt(Mssim),                     # np.sqrt(Mssim)
         Mssim**3,                           # Mssim**3
         Mssim**(1/3),                       # Mssim**(1/3)
@@ -25,36 +25,32 @@ def normalize_Mssim(Mssim, datasets):
         max_limit = 100
     else:
         print('wrong dataset name!')
-    
+
     Mssim = Mssim / max_limit
     Mssim = np.where(Mssim < 0, 1e-8, Mssim)
     Mssim = np.where(Mssim > 1, 1, Mssim)
     return Mssim
 
 def normalize_mos(scores, datasets, new_min=0, new_max=1):
+    old_min = 0 
     if datasets == 'csiq':
-        old_min = 0 
         old_max = 1
         dmos = True
     elif datasets == 'live':
-        old_min = 0
         old_max = 100
         dmos = True
     elif datasets == 'tid2013':
-        old_min = 0
         old_max = 9
         dmos = False
     elif datasets == 'koniq-10k':
-        old_min = 0
         old_max = 100
         dmos = False
     else:
         print('wrong dataset name!')
         return 0
 
-    # 计算归一化后的分数
     if dmos:
-        output_scores = [(1-((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min)) for score in scores]    # 如果是 Dmos，则将分数取反
+        output_scores = [(1-((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min)) for score in scores] # 如果是 Dmos，则将分数取反
     else:
         output_scores = [((new_max - new_min) * (score - old_min) / (old_max - old_min) + new_min) for score in scores]
     return np.array(output_scores)
@@ -103,11 +99,11 @@ def savedata_withlabel(file, vector, label):
     file.write('\t')
     file.write('\n')
 
-def savedata(file, mat):
-    for i in range(len(mat)):
-        file.write(str(mat[i]))
-        file.write('\t')
-    file.write('\n')
+# def savedata(file, mat):
+#     for i in range(len(mat)):
+#         file.write(str(mat[i]))
+#         file.write('\t')
+#     file.write('\n')
 
 def savedata_intfloat(file, mat, no):
     for i in range(len(mat)):

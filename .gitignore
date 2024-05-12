@@ -4,10 +4,8 @@ experiment.xlsx
 *.pkl
 *.jpg
 *.zip
-curd/
+docs/
 outputs/
 Database/
-pretrained/
-data/
 __pycache__/
 .vscode/
