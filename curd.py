@@ -6,7 +6,7 @@ import numpy as np
 from tqdm import tqdm
 from scipy.linalg import det
 from itertools import combinations
-from utils import loadMssimMos, loaddata, savedata_intfloat, savedata_withlabel, sort, calculate_sp 
+from utils import loadMssimMos, loaddata, savedata_intfloat, savedata_withlabel, sort, calculate_sp
 def main(config, no = 7, threshold = 0.9999):
 
     print('curd: %s_%s' % (config.dataset, config.pretrained_dataset))
@@ -15,16 +15,15 @@ def main(config, no = 7, threshold = 0.9999):
     data = np.transpose(np.concatenate((Mssim, mos), axis=1))
     R = np.abs(np.corrcoef(data))
 
-    temp_dir = f"./outputs/curd outputs/temp_" + str(random.randint(100000, 999999)) + ".txt"
+    temp_dir = f"./outputs/temp_" + str(random.randint(100000, 999999)) + ".txt"
     with open(temp_dir, 'w') as file:
         total_combos = math.comb(R.shape[0] - 1, no)
         for combo in tqdm( combinations(range(R.shape[0]-1), no), total=total_combos):
-            # 考虑互相关列
-            indices = combo + (R.shape[0]-1, )
 
             submatrix_den = R[combo, :][:, combo] # 计算square_omega的分母
             if (submatrix_den > threshold).sum() > no: continue # 大于threahold的元素个数,不超过no (除了 no 个对角线元素)
 
+            indices = combo + (R.shape[0]-1, ) # 考虑互相关列
             submatrix_num = R[indices, :][:, indices] # 计算square_omega的分子
 
             if det(submatrix_den) == 0: # 避免分母为0
@@ -35,6 +34,7 @@ def main(config, no = 7, threshold = 0.9999):
 
             if square_omega < 0:
                 print("The square_omega is not non-negative.")
+                return
 
             savedata_withlabel(file, combo, square_omega) # 写入当前行
 
@@ -64,9 +64,8 @@ def main(config, no = 7, threshold = 0.9999):
     with open(output_file, 'w') as file:
         for i in range(mat.shape[0]):
             savedata_intfloat(file, mat[i,:], no)
-        print("output to "+output_file)
-    print(f"Curd finished!\n")
-
+    print("Curd finished! Output to " + output_file)
+    
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', dest='dataset', type=str, default='live', help='Support datasets: koniq-10k|live|csiq|tid2013')
