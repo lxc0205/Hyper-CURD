@@ -57,7 +57,6 @@ def normalize_mos(scores, datasets, new_min=0, new_max=1):
 
 def calculate_sp(y, yhat):
     SROCC, _ = spearmanr(y, yhat)
-
     PLCC, _ = pearsonr(y, yhat)
     return SROCC, PLCC
 
@@ -99,12 +98,6 @@ def savedata_withlabel(file, vector, label):
     file.write('\t')
     file.write('\n')
 
-# def savedata(file, mat):
-#     for i in range(len(mat)):
-#         file.write(str(mat[i]))
-#         file.write('\t')
-#     file.write('\n')
-
 def savedata_intfloat(file, mat, no):
     for i in range(len(mat)):
         if i < no:
@@ -140,6 +133,3 @@ img_num = {
     'koniq-10k': list(range(0, 10073)),
     'bid': list(range(0, 586)),
 }
-
-
-

@@ -5,14 +5,11 @@ import numpy as np
 from HyerIQASolver import HyperIQASolver
 from utils import folder_path, img_num
 def main(config):
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
     sel_num = img_num[config.pretrained_dataset]
 
     srcc_all = np.zeros(config.train_test_num, dtype=np.float)
     plcc_all = np.zeros(config.train_test_num, dtype=np.float)
 
-    print('Training on %s dataset for %d rounds...' % (config.pretrained_dataset, config.train_test_num))
     for i in range(config.train_test_num):
         print('Round %d' % (i+1))
         # Randomly select 80% images for training and the rest for testing
@@ -41,7 +38,8 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', dest='epochs', type=int, default=16, help='Epochs for training')
     parser.add_argument('--patch_size', dest='patch_size', type=int, default=224, help='Crop size for training & testing image patches')
     parser.add_argument('--train_test_num', dest='train_test_num', type=int, default=10, help='Train-test times')
-
     config = parser.parse_args()
+    print(f'Train HyperIQA on {config.pretrained_dataset} dataset for {config.train_test_num} rounds...')
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     main(config)
 

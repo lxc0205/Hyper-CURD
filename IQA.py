@@ -2,61 +2,48 @@ import torch
 import models
 import random               
 import numpy as np
+from torchvision import transforms
 import torchvision
-from torchvision.transforms import ToPILImage 
-
 
 # Load VGG model
-net = torchvision.models.vgg16(pretrained=True).cuda().features.eval()
+# net = models.vgg16(pretrained=True).cuda().features.eval()
+net = torchvision.models.vgg16(weights = torchvision.models.VGG16_Weights.IMAGENET1K_V1).cuda().features.eval()
 # Feature Layers ID
-convlayer_id = [4, 9, 16, 23, 30]
+# convlayer_id = [4, 9, 16, 23, 30]
+convlayer_id = [0, 2, 5, 7, 10]
 # Sample Rate
 sr = np.array([64, 128, 256, 512, 512])
 
 # 特征图用
-transform = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((512, 384)),
-            torchvision.transforms.RandomCrop(size=224),
-            torchvision.transforms.ToTensor()])
+transform = transforms.Compose([
+            transforms.Resize((512, 384)),
+            transforms.RandomCrop(size=224),
+            transforms.ToTensor()])
 
-to_pil = ToPILImage()
+to_pil = transforms.ToPILImage()
 
-class Hyper_IQA():
+class IQA():
     def __init__(self, dataset):
-        super(Hyper_IQA, self).__init__()
-        # load our pre-trained model on the koniq-10k dataset
-        # model
+        super(IQA, self).__init__()
+        # load our pre-trained model on the pretrained dataset
         self.model_hyper = models.HyperNet(16, 112, 224, 112, 56, 28, 14, 7).cuda()
         self.model_hyper.train(False)
         self.model_hyper.load_state_dict((torch.load('./outputs/pretrained/' + dataset + '_pretrained.pkl')))
 
-    def model(self, img):
-        img = torch.tensor(img).cuda()
-        # 随机计算十次计算平均scores
-        pred_scores = []
-        for i in range(10):
-            paras = self.model_hyper(img)  # 'paras' contains the network weights conveyed to target network
+    def HyperIQA(self, img):
+        paras = self.model_hyper(img)  # 'paras' contains the network weights conveyed to target network
 
-            # Building target network
-            model_target = models.TargetNet(paras).cuda()
-            for param in model_target.parameters():
-                param.requires_grad = False
+        # Building target network
+        model_target = models.TargetNet(paras).cuda()
+        for param in model_target.parameters():
+            param.requires_grad = False
 
-            # Quality prediction
-            pred = model_target(paras['target_in_vec'])  # 'paras['target_in_vec']' is the input to target net
-            pred_scores.append(float(pred.item()))
-        return np.mean(pred_scores)
-
-
-class UIC_IQA():
-    def __init__(self, dataset):
-        super(UIC_IQA, self).__init__()
-        self.model_hyper = models.HyperNet(16, 112, 224, 112, 56, 28, 14, 7).cuda()
-        self.model_hyper.train(False)
-        self.model_hyper.load_state_dict((torch.load('./outputs/pretrained/' + dataset + '_pretrained.pkl')))
+        # Quality prediction
+        pred = model_target(paras['target_in_vec'])  # 'paras['target_in_vec']' is the input to target net
+        return pred
 
     def extractFeature(self, img):
-        img = torch.tensor(img).cuda()
+        img = torch.as_tensor(img).cuda()
         feat_map = [img]
         cnt = 0
         for i, layer in enumerate(net.children()):
@@ -65,39 +52,30 @@ class UIC_IQA():
                 img0 = img
                 for j in range(img0.shape[1]):
                     if j % sr[cnt] == 0:
-                        # 假设img0的通道数为3，即最大索引为2
-                        num_channels = img0.size(1) - 1
-                        # 生成随机的三个通道索引（0到num_channels之间，包括0和num_channels）
-                        random_channels = [random.randint(0, num_channels) for _ in range(3)]
-                        temp = torch.cat([torch.tensor(transform(to_pil(img0[:, c,:,:]))).unsqueeze(1) for c in random_channels], dim=1).cuda()
+                        random_channels = [random.randint(0, img0.size(1) - 1) for _ in range(3)] # 生成随机的三个通道索引（0到num_channels之间，包括0和num_channels）
+                        temp = torch.cat([torch.as_tensor(transform(to_pil(img0[:, c,:,:]))).unsqueeze(1) for c in random_channels], dim=1).cuda()
                         feat_map.append(temp)
                 cnt = cnt + 1
         return feat_map
-
     
-    def model(self, img):
-        # Extract feature map
-        feat_map = self.extractFeature(img)
+    def Hyper_IQA(self, img):
+        img = torch.tensor(img).cuda()
+        pred_scores = []
+        for _ in range(10):
+            pred = self.HyperIQA(img)
+            pred_scores.append(float(pred.item()))
+        return np.mean(pred_scores)
+
+    def UIC_IQA(self, img):
+        feat_map = self.extractFeature(img) # Extract feature map
         pred_scores = []
         layer_scores = []
-        # random crop 10 patches and calculate mean quality score
         for feat in feat_map:
-            for i in range(10):
-                paras = self.model_hyper(feat)  # 'paras' contains the network weights conveyed to target network
-
-                # Building target network
-                model_target = models.TargetNet(paras).cuda()
-                for param in model_target.parameters():
-                    param.requires_grad = False
-
-                # Quality prediction
-                pred = model_target(paras['target_in_vec'])  # 'paras['target_in_vec']' is the input to target net
+            for _ in range(10):
+                pred = self.HyperIQA(feat)
                 pred_scores.append(float(pred.item()))
             score = np.mean(pred_scores)
             layer_scores.append(score)
-            # quality score ranges from 0-100, a higher score indicates a better quality
-            # print('Predicted quality score: %.2f' % score)
         final_score = np.mean(layer_scores)
-        # print('Final quality score: %.2f' % final_score) 
         return layer_scores, final_score
 
