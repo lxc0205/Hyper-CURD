@@ -4,7 +4,7 @@ import numpy as np
 from tqdm import tqdm
 from scipy.linalg import det
 from itertools import combinations
-from utils import loadMssimMos, savedata_intfloat, calculate_sp, sort
+from utils import loadMssimMos, savedata_intfloat_comma, calculate_sp, sort
 def main(config, no = 7, threshold = 0.9999):
     Mssim, mos = loadMssimMos(f"./outputs/hyperIQA outputs/{config.dataset}_{config.pretrained_dataset}.txt", config.dataset, config.pretrained_dataset)
     R = np.abs(np.corrcoef(np.transpose(np.concatenate((Mssim, mos), axis=1))))
@@ -56,7 +56,7 @@ def main(config, no = 7, threshold = 0.9999):
     mat = mat[:5000000, :]
     with open(f'./outputs/curd outputs/fitting_{config.dataset}_{config.pretrained_dataset}.txt', 'w') as file:
         for i in range(mat.shape[0]):
-            savedata_intfloat(file, mat[i,:], no)
+            savedata_intfloat_comma(file, mat[i,:], no)
     print("Curd finished!")
     
 if __name__ == "__main__":
