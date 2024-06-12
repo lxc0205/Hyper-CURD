@@ -13,11 +13,11 @@ pip install -r requirements.txt
 ### Training the baseline model (Original HyperIQA: training)
 
 ```
-python hyperTrain.py --pretrained_dataset <pretrained>
+python hyperTrain.py --predataset <pretrained>
 ```
 
 Some available options:
-* `--pretrained_dataset`: Training dataset, support datasets: koniq-10k | live | csiq | tid2013.
+* `--predataset`: Training dataset, support datasets: koniq-10k | live | csiq | tid2013.
 
 Outputs:
 * `pkl`: .\outputs\pretrained\\\<pretrained>.pkl
@@ -26,12 +26,12 @@ Outputs:
 ### Testing the baseline model (Original HyperIQA: testing) and geting the layer scores (For CURD)
 
 ```
-python hyperIQA.py --dataset <dataset> --pretrained_dataset <pretrained> --curd <True or False>
+python hyperIQA.py --curd <True or False> --predataset <pretrained> --dataset <dataset>
 ```
 
 Some available options:
 * `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
-* `--pretrained_dataset`: Select the pretrained model.
+* `--predataset`: Select the pretrained model.
 * `--curd`: The flag of using curd, False represents the original HyperIQA.
 
 
@@ -43,26 +43,23 @@ Outputs:
 ### Curd
 
 ```
-python curd.py --dataset <dataset> --pretrained_dataset <pretrained> --order <True or False> --save_num <save numbers>
+python curd.py --save_num <save numbers> --predataset <pretrained> --dataset <dataset> 
 ```
 
 Some available options:
 * `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
-* `--pretrained_dataset`: Select the pretrained model.
-* `--order`: Sort the output results: Ascending(True) or descending(False).
+* `--predataset`: Select the pretrained model.
 * `--save_num`: Save numbers, default number is 50000.
 
 Outputs:
-* `sorted sw flie`: .\outputs\curd outputs\sw_\<file name>.txt
-* `fitting ouptuts file`: .\outputs\curd outputs\fitting\_\<dataset>.txt or .\outputs\curd outputs\fitting\_\<dataset>\_\<pretrained_dataset>.txt
+* `fitting ouptuts file`: .\outputs\curd outputs\fitting\_\<dataset>.txt or .\outputs\curd outputs\fitting\_\<dataset>\_\<predataset>.txt
 
 ### Nonliear prediction
 
 ```
-python prediction.py --beta '1.61 0.19 -1.10 -7.78 -0.139 23.921 0.038' --index '0 1 2 3 10 15 47' --dataset tid2013
+python prediction.py --predataset <pretrained> --dataset <dataset>
 ```
 
 Some available options:
 * `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
-* `--beta`: The cofficient of nonliear regression, default 7 numbers.
-* `--index`: The selected layer index, default 7 numbers.
+* `--predataset`: Select the pretrained model.

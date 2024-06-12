@@ -6,7 +6,7 @@ from scipy.linalg import det
 from itertools import combinations
 from utils import loadMssimMos, savedata_intfloat_comma, calculate_sp, sort
 def main(config, no = 7, threshold = 0.9999):
-    Mssim, mos = loadMssimMos(f"./outputs/hyperIQA outputs/{config.dataset}_{config.pretrained_dataset}.txt", config.dataset, config.pretrained_dataset)
+    Mssim, mos = loadMssimMos(f"./outputs/hyperIQA outputs/{config.dataset}_{config.predataset}.txt", config.dataset, config.predataset)
     R = np.abs(np.corrcoef(np.transpose(np.concatenate((Mssim, mos), axis=1))))
 
     mat = np.zeros((math.comb(R.shape[0] - 1, no), no + 1))
@@ -25,10 +25,11 @@ def main(config, no = 7, threshold = 0.9999):
 
     # 排序
     mat = mat[:epoch, :]
-    sorted_matrix = sort(mat, config.order, row = 7)
-    print(f'Number of data: {epoch}\n')
+    sorted_matrix = sort(mat, order=True, row = 7) # ascending 
+    print(f'Number of curd items: {epoch}\n')
     
     # regression evaluation
+    sorted_matrix = sorted_matrix[:config.save_num, :]
     mat = np.zeros((sorted_matrix.shape[0], 2*no + 4))
     epoch = 0
     for row in tqdm(sorted_matrix, total=len(sorted_matrix)):
@@ -49,12 +50,12 @@ def main(config, no = 7, threshold = 0.9999):
         except:
             continue
     
-    print(f'Number of data: {epoch}\n')
+    print(f'Number of regression items: {epoch}\n')
 
     # 排序,结果保存到文件
-    mat = sort(mat, order=False, row=17)
-    mat = mat[:5000000, :]
-    with open(f'./outputs/curd outputs/fitting_{config.dataset}_{config.pretrained_dataset}.txt', 'w') as file:
+    mat = sort(mat, order=False, row = 17) # descending
+    mat = mat[:config.save_num, :]
+    with open(f'./outputs/curd outputs/fitting_{config.dataset}_{config.predataset}.txt', 'w') as file:
         for i in range(mat.shape[0]):
             savedata_intfloat_comma(file, mat[i,:], no)
     print("Curd finished!")
@@ -62,11 +63,10 @@ def main(config, no = 7, threshold = 0.9999):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', dest='dataset', type=str, default='csiq', help='Support datasets: koniq-10k|live|csiq|tid2013')
-    parser.add_argument('--pretrained_dataset', dest='pretrained_dataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
-    parser.add_argument('--order', dest='order', type=bool, default = True, help='Ascending(True) or descending(False)') 
-    parser.add_argument('--save_num', dest='save_num', type=int, default=50000, help='Save numbers.')
+    parser.add_argument('--predataset', dest='predataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
+    parser.add_argument('--save_num', dest='save_num', type=int, default=5000000, help='Save numbers.')
     config = parser.parse_args()
-    print(f'curd: {config.dataset}_{config.pretrained_dataset}')
+    print(f'curd: {config.dataset}_{config.predataset}')
     main(config)
 
 
