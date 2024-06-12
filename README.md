@@ -9,20 +9,6 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-
-### Training the baseline model (Original HyperIQA: training)
-
-```
-python hyperTrain.py --predataset <pretrained>
-```
-
-Some available options:
-* `--predataset`: Training dataset, support datasets: koniq-10k | live | csiq | tid2013.
-
-Outputs:
-* `pkl`: .\outputs\pretrained\\\<pretrained>.pkl
-
-
 ### Testing the baseline model (Original HyperIQA: testing) and geting the layer scores (For CURD)
 
 ```
@@ -57,9 +43,26 @@ Outputs:
 ### Nonliear prediction
 
 ```
-python prediction.py --predataset <pretrained> --dataset <dataset>
+python prediction.py --mode <True or False> --predataset <pretrained> --dataset <dataset>
 ```
 
 Some available options:
 * `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
 * `--predataset`: Select the pretrained model.
+* `--mode`: The flag of using HyperIQA network, False represents the usage of the loading scores in files.
+
+
+
+## Additions
+
+### Training the baseline model (Original HyperIQA: training)
+
+```
+python hyperTrain.py --predataset <pretrained>
+```
+
+Some available options:
+* `--predataset`: Training dataset, support datasets: koniq-10k | live | csiq | tid2013.
+
+Outputs:
+* `pkl`: .\outputs\pretrained\\\<pretrained>.pkl
