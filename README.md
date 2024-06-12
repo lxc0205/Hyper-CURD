@@ -12,24 +12,24 @@ pip install -r requirements.txt
 ### Testing the baseline model (Original HyperIQA: testing) and geting the layer scores (For CURD)
 
 ```
-python hyperIQA.py --curd <True or False> --predataset <pretrained> --dataset <dataset>
+python hyperIQA.py <--curd> --predataset <pretrained> --dataset <dataset>
 ```
 
 Some available options:
 * `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
 * `--predataset`: Select the pretrained model.
-* `--curd`: The flag of using curd, False represents the original HyperIQA.
+* `--curd`: The flag of using curd, switch off represents the original HyperIQA.
 
 
 Outputs:
-* `curd=False`: print `SRCC` and `PLCC`
+* `No usage of --curd`: print `SRCC` and `PLCC`
 
-* `curd=True, layer scores`: .\outputs\hyperIQA outputs\\\<dataset>.txt or .\outputs\hyperIQA outputs\\\<dataset>_\<pretrained>.txt
+* `Usage of curd, layer scores`: .\outputs\hyperIQA outputs\\\<dataset>.txt or .\outputs\hyperIQA outputs\\\<dataset>_\<pretrained>.txt
 
 ### Curd
 
 ```
-python curd.py --save_num <save numbers> --predataset <pretrained> --dataset <dataset> 
+python curd.py --save_num <save_num> --predataset <pretrained> --dataset <dataset> 
 ```
 
 Some available options:
@@ -43,13 +43,13 @@ Outputs:
 ### Nonliear prediction
 
 ```
-python prediction.py --mode <True or False> --predataset <pretrained> --dataset <dataset>
+python prediction.py <--mode> --predataset <pretrained> --dataset <dataset>
 ```
 
 Some available options:
 * `--dataset`: Testing dataset, support datasets:  koniq-10k | live | csiq | tid2013.
 * `--predataset`: Select the pretrained model.
-* `--mode`: The flag of using HyperIQA network, False represents the usage of the loading scores in files.
+* `--mode`: The flag of using HyperIQA network, switch off represents the usage of the loading scores in files.
 
 
 
