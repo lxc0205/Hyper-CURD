@@ -107,14 +107,6 @@ def savedata_intfloat_comma(file, mat, no):
         file.write(',')
     file.write('\n')
 
-def savedata_intfloat(file, mat, no):
-    for i in range(len(mat)):
-        if i < no:
-            file.write(str(int(mat[i])))
-        else:
-            file.write(str(mat[i]))
-        file.write('\t')
-    file.write('\n')
 def sort(data, order, row):
     if order:
         sorted_indices = np.argsort(data[:, row], axis=0, kind='mergesort')
