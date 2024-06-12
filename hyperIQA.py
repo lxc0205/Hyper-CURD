@@ -42,6 +42,6 @@ if __name__ == '__main__':
     parser.add_argument('--patch_size', dest='patch_size', type=int, default=224, help='Crop size for training & testing image patches')
     parser.add_argument('--curd', action='store_true', help='The flag of using curd')
     config = parser.parse_args()
-    print(f'Testing on {config.dataset} dataset, based on {config.predataset} pretrained model')
+    print(f'Testing on {config.dataset} dataset, based on {config.predataset} pretrained model, using CURD: {config.curd}.')
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     main(config)
