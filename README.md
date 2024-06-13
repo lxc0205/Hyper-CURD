@@ -22,9 +22,9 @@ Some available options:
 
 
 Outputs:
-* `No usage of --curd`: print `SRCC` and `PLCC`
+* `No usage of --curd`: print `PLCC` and `SRCC`
 
-* `Usage of curd, layer scores`: .\outputs\hyperIQA outputs\\\<dataset>.txt or .\outputs\hyperIQA outputs\\\<dataset>_\<pretrained>.txt
+* `Usage of curd, layer scores`: .\outputs\hyperIQA outputs\\\<dataset>_\<pretrained>.txt
 
 ### Curd
 
@@ -38,7 +38,7 @@ Some available options:
 * `--save_num`: Save numbers, default number is 50000.
 
 Outputs:
-* `fitting ouptuts file`: .\outputs\curd outputs\fitting\_\<dataset>.txt or .\outputs\curd outputs\fitting\_\<dataset>\_\<predataset>.txt
+* `fitting ouptuts file`: .\outputs\curd outputs\fitting\_\<dataset>\_\<predataset>.txt
 
 ### Nonliear prediction
 
