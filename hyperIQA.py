@@ -7,7 +7,7 @@ from iqa import IQA
 from utils import calculate_sp, savedata_withlabel, folder_path, img_num
 
 def main(config):
-    dataLoader = data_loader.DataLoader(config.dataset, folder_path[config.dataset], img_num[config.dataset], config.patch_size, config.patch_num, istrain=False)
+    dataLoader = data_loader.DataLoader(config.dataset, folder_path[config.dataset], img_num[config.dataset], patch_size = 224, patch_num = 1, istrain=False)
     data = dataLoader.get_data()
     
     method = IQA(config.predataset)
@@ -38,8 +38,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', dest='dataset', type=str, default='tid2013', help='Support datasets: koniq-10k|live|csiq|tid2013')
     parser.add_argument('--predataset', dest='predataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
-    parser.add_argument('--patch_num', dest='patch_num', type=int, default=1, help='Number of sample patches from testing image')
-    parser.add_argument('--patch_size', dest='patch_size', type=int, default=224, help='Crop size for training & testing image patches')
     parser.add_argument('--curd', action='store_true', help='The flag of using curd')
     config = parser.parse_args()
     print(f'Testing on {config.dataset} dataset, based on {config.predataset} pretrained model, using CURD: {config.curd}.')

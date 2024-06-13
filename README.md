@@ -23,7 +23,6 @@ Some available options:
 
 Outputs:
 * `No usage of --curd`: print `PLCC` and `SRCC`
-
 * `Usage of curd, layer scores`: .\outputs\hyperIQA outputs\\\<dataset>_\<pretrained>.txt
 
 ### Curd
@@ -54,7 +53,6 @@ Some available options:
 
 
 ## Additions
-
 ### Training the baseline model (Original HyperIQA: training)
 
 ```
