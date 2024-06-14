@@ -47,6 +47,6 @@ if __name__ == '__main__':
     parser.add_argument('--predataset', dest='predataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
     parser.add_argument('--mode', action='store_true', help='True for score evaluing, False for score loading')
     config = parser.parse_args()
-    print(f'regression functions. Mode: {config.mode}')
+    print(f'regression functions. Use loading mode: {config.mode}')
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     main(config)

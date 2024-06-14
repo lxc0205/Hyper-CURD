@@ -59,7 +59,8 @@ class IQA():
         return feat_map
     
     def Hyper_IQA(self, img):
-        img = torch.tensor(img).cuda()
+        img = torch.as_tensor(img).cuda()
+        # img = torch.tensor(img).cuda()
         pred_scores = []
         for _ in range(10):
             pred = self.HyperIQA(img)

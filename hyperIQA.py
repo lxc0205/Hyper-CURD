@@ -22,8 +22,8 @@ def main(config):
             pred_scores.append(float(score.item()))
             gt_scores = gt_scores + label.tolist()
 
-        pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, config.patch_num)), axis=1)
-        gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, config.patch_num)), axis=1)
+        pred_scores = np.mean(np.reshape(np.array(pred_scores), (-1, 1)), axis=1)
+        gt_scores = np.mean(np.reshape(np.array(gt_scores), (-1, 1)), axis=1)
         srcc, plcc = calculate_sp(pred_scores, gt_scores)
         print(f'Testing median SRCC {srcc},\tmedian PLCC {plcc}')
     else:
@@ -32,7 +32,7 @@ def main(config):
             for img, label in tqdm(data):
                 layer_scores, _ = method.UIC_IQA(img)
                 savedata_withlabel(file, layer_scores, float(label.numpy())) # 保存层分数
-
+                
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -40,6 +40,6 @@ if __name__ == '__main__':
     parser.add_argument('--predataset', dest='predataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
     parser.add_argument('--curd', action='store_true', help='The flag of using curd')
     config = parser.parse_args()
-    print(f'Testing on {config.dataset} dataset, based on {config.predataset} pretrained model, using CURD: {config.curd}.')
+    print(f'Testing on {config.dataset} dataset, based on the model pretrained on {config.predataset}, CURD switch: {config.curd}.')
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     main(config)

@@ -90,6 +90,33 @@ def loadMssimMos(file_path, dataset, pretrained_dataset):
 
     return Mssim, mos
 
+def loadMssimMosPath(file_path):
+    parts = file_path.split('_')
+
+    if len(parts) >= 2:
+        dataset = parts[0]
+        pretrained_dataset = parts[1]
+    pretrained_dataset = pretrained_dataset[:-4]
+
+    with open(f"./outputs/hyperIQA outputs/" + file_path, 'r') as f:
+        lines = f.readlines()
+    data = []
+    for line in lines:
+        fields = line.split('\t')[:-1]
+        float_fields = [float(field) for field in fields]
+        data.append(float_fields)
+    data = np.array(data)
+
+    # 预处理
+    mos = data[:, -1]
+    Mssim = data[:, :-1]
+    Mssim = normalize_Mssim(Mssim, pretrained_dataset) # 归一化到0-1
+    Mssim = expand(Mssim) # 用函数集扩充 Mssim
+    mos = normalize_mos(mos, dataset) # 归一化到0-1
+    mos = mos[:, np.newaxis]
+
+    return Mssim, mos
+
 def savedata_withlabel(file, vector, label):
     for i in range(len(vector)):
         file.write(str(vector[i]))

@@ -4,9 +4,9 @@ import numpy as np
 from tqdm import tqdm
 from scipy.linalg import det
 from itertools import combinations
-from utils import loadMssimMos, savedata_intfloat_comma, calculate_sp, sort
+from utils import loadMssimMosPath, savedata_intfloat_comma, calculate_sp, sort
 def main(config, no = 7, threshold = 0.9999):
-    Mssim, mos = loadMssimMos(f"./outputs/hyperIQA outputs/{config.dataset}_{config.predataset}.txt", config.dataset, config.predataset)
+    Mssim, mos = loadMssimMosPath(config.filename)
     R = np.abs(np.corrcoef(np.transpose(np.concatenate((Mssim, mos), axis=1))))
 
     mat = np.zeros((math.comb(R.shape[0] - 1, no), no + 1))
@@ -55,15 +55,14 @@ def main(config, no = 7, threshold = 0.9999):
     # 排序,结果保存到文件
     mat = sort(mat, order=False, row = 17) # descending
     mat = mat[:config.save_num, :]
-    with open(f'./outputs/curd outputs/fitting_{config.dataset}_{config.predataset}.txt', 'w') as file:
+    with open(f'./outputs/curd outputs/fitting_'+ config.filename, 'w') as file:
         for i in range(mat.shape[0]):
             savedata_intfloat_comma(file, mat[i,:], no)
     print("Curd finished!")
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', dest='dataset', type=str, default='csiq', help='Support datasets: koniq-10k|live|csiq|tid2013')
-    parser.add_argument('--predataset', dest='predataset', type=str, default='koniq-10k', help='Support datasets: koniq-10k|live|csiq|tid2013')
+    parser.add_argument('--filename', dest='filename', type=str, default='', help='The filename of the score file for curd.')
     parser.add_argument('--save_num', dest='save_num', type=int, default=5000000, help='Save numbers.')
     config = parser.parse_args()
     print(f'curd: {config.dataset}_{config.predataset}')
